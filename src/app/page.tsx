@@ -8,5 +8,5 @@ export default function Home() {
       <HouseSimpleIcon size={50} />
       <h1 className="text-5xl font">Welcome to the Homely.</h1>
     </main>
-  )
+  ) 
 }
