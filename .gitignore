@@ -13,9 +13,6 @@
 # testing
 /coverage
 
-
-#text
-*.md 
 # next.js
 /.next/
 /out/
