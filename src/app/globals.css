@@ -4,6 +4,23 @@ body {
   font-family: "GeneralSans", sans-serif;
 }
 
+/* === GLOBAL SCROLLBAR REMOVAL === */
+html,
+body {
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and old Edge */
+}
+
+/* Chrome, Safari, Edge (WebKit-based) */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+}
+
 @font-face {
   font-family: "GeneralSans";
   src:
