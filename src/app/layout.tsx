@@ -1,19 +1,10 @@
-/**
- * Root Layout
- * Main layout wrapper for the entire application
- * Initializes authentication on app load
- *
- * Authentication Flow:
- * 1. App loads
- * 2. AuthInitializer component runs useEffect
- * 3. Calls fetchCurrentUser() to restore session from cookies
- * 4. If user exists: sets auth state
- * 5. If user doesn't exist: user remains unauthenticated
- * 6. Protected routes (like /dashboard) check auth state and redirect if needed
- */
-
 import type { Metadata } from "next";
 import "./globals.css";
+
+export const metadata: Metadata = {
+  title: "Homely",
+  description: "Rental and Roommate finder application.",
+};
 
 export default function RootLayout({
   children,
@@ -22,9 +13,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full antialiased">
-      <body className="min-h-full flex flex-col">
-        {children}
-      </body>
+      <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
 }

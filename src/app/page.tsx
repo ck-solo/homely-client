@@ -1,12 +1,9 @@
-"use client";
-
-import { HouseSimpleIcon } from '@phosphor-icons/react'
+import React from "react";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-5">
-      <HouseSimpleIcon size={50} />
+    <div className="min-h-screen flex justify-center items-center">
       <h1 className="text-5xl">Welcome to the Homely.</h1>
-    </main>
-  ) 
+    </div>
+  );
 }
