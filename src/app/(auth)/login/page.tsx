@@ -5,14 +5,13 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "@phosphor-icons/react";
-import { useAppDispatch, useAppSelector } from "@/redux/store";
-import { loginUser, clearError } from "@/features/auth/slice";
 import { useRouter } from "next/navigation";
+import { useLogin } from "@/features/auth/hooks/useLogin";
+import { loginUser } from "@/features/auth/slice";
 
 export default function LoginPage() {
-  const dispatch = useAppDispatch();
   const router = useRouter();
-  const { isLoading, error } = useAppSelector((state) => state.auth);
+  const { login, isLoading, error, clearLoginError } = useLogin();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -21,12 +20,12 @@ export default function LoginPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    if (error) dispatch(clearError());
+    if (error) clearLoginError();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const resultAction = await dispatch(loginUser(formData));
+    const resultAction = await login(formData);
     if (loginUser.fulfilled.match(resultAction)) {
       const role = resultAction.payload.data.user.role;
       if (role === "OWNER") {
@@ -38,7 +37,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row w-full min-h-screen bg-white text-neutral-900 pt-[72px] md:pt-[88px]">
+    <div className="flex flex-col lg:flex-row w-full min-h-screen bg-white text-neutral-900 pt-18 md:pt-22">
       
       {/* LEFT COLUMN - Authentication Form */}
       <div className="w-full lg:w-1/2 flex flex-col justify-center px-8 md:px-16 lg:px-24 py-12 lg:py-20 relative bg-white">
@@ -158,7 +157,7 @@ export default function LoginPage() {
 
       {/* RIGHT COLUMN - Visual/Branding (Hidden on smaller screens) */}
       <div className="hidden lg:block w-1/2 relative bg-[#FAFAFA] p-8 lg:p-12 lg:pt-8">
-        <div className="sticky top-[104px] h-[calc(100vh-140px)] w-full flex flex-col justify-between overflow-hidden rounded-3xl shadow-sm">
+        <div className="sticky top-26 h-[calc(100vh-140px)] w-full flex flex-col justify-between overflow-hidden rounded-3xl shadow-sm">
           <motion.div 
             initial={{ opacity: 0 }} 
             animate={{ opacity: 1 }} 

@@ -1,5 +1,9 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import api from '@/lib/axios';
+import { loginApi } from '@/api/auth/login';
+import { registerApi } from '@/api/auth/register';
+import { verifyEmailApi } from '@/api/auth/verifyEmail';
+import { logoutApi } from '@/api/auth/logout';
+import { getMeApi } from '@/api/auth/getMe';
 
 // Types
 export interface User {
@@ -8,6 +12,7 @@ export interface User {
   email: string;
   role: 'TENANT' | 'OWNER' | 'ADMIN';
   phone?: string;
+  profilePicture?: string;
   isEmailVerified: boolean;
   accountStatus: 'ACTIVE' | 'BLOCKED';
   createdAt: string;
@@ -36,8 +41,8 @@ export const registerUser = createAsyncThunk(
   'auth/register',
   async (userData: any, { rejectWithValue }) => {
     try {
-      const response = await api.post('/auth/register', userData);
-      return response.data;
+      const data = await registerApi(userData);
+      return data;
     } catch (error: any) {
       return rejectWithValue(
         error.response?.data?.message || 'Failed to register. Please try again.'
@@ -50,8 +55,8 @@ export const loginUser = createAsyncThunk(
   'auth/login',
   async (credentials: any, { rejectWithValue }) => {
     try {
-      const response = await api.post('/auth/login', credentials);
-      return response.data;
+      const data = await loginApi(credentials);
+      return data;
     } catch (error: any) {
       return rejectWithValue(
         error.response?.data?.message || 'Invalid email or password.'
@@ -64,8 +69,8 @@ export const verifyEmail = createAsyncThunk(
   'auth/verifyEmail',
   async (token: string, { rejectWithValue }) => {
     try {
-      const response = await api.post('/auth/verify-email', { token });
-      return response.data;
+      const data = await verifyEmailApi(token);
+      return data;
     } catch (error: any) {
       return rejectWithValue(
         error.response?.data?.message || 'Verification failed.'
@@ -78,7 +83,7 @@ export const logoutUser = createAsyncThunk(
   'auth/logout',
   async (_, { rejectWithValue }) => {
     try {
-      await api.post('/auth/logout');
+      await logoutApi();
       return true;
     } catch (error: any) {
       return rejectWithValue('Logout failed.');
@@ -90,8 +95,8 @@ export const getMe = createAsyncThunk(
   'auth/getMe',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get('/auth/me');
-      return response.data;
+      const data = await getMeApi();
+      return data;
     } catch (error: any) {
       return rejectWithValue('Failed to load user profile.');
     }

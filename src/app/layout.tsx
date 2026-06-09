@@ -22,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full antialiased scroll-smooth">
+    <html lang="en" className="h-full antialiased scroll-smooth" suppressHydrationWarning>
       <body className="min-h-full flex flex-col bg-[#FAFAFA] selection:bg-neutral-200 selection:text-neutral-900">
         <Providers>
           <AuthGuard>

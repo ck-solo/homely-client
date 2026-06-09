@@ -5,14 +5,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ArrowLeft, House, Key } from "@phosphor-icons/react";
-import { useAppDispatch, useAppSelector } from "@/redux/store";
-import { registerUser, clearError } from "@/features/auth/slice";
 import { useRouter } from "next/navigation";
+import { useRegister } from "@/features/auth/hooks/useRegister";
+import { registerUser } from "@/features/auth/slice";
 
 export default function RegisterPage() {
-  const dispatch = useAppDispatch();
   const router = useRouter();
-  const { isLoading, error } = useAppSelector((state) => state.auth);
+  const { register, isLoading, error, clearRegisterError } = useRegister();
 
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [formData, setFormData] = useState({
@@ -29,7 +28,7 @@ export default function RegisterPage() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setValidationError("");
-    if (error) dispatch(clearError());
+    if (error) clearRegisterError();
   };
 
   const handleNextStep = () => {
@@ -43,19 +42,19 @@ export default function RegisterPage() {
       return;
     }
 
-    const resultAction = await dispatch(registerUser(formData));
+    const resultAction = await register(formData);
     if (registerUser.fulfilled.match(resultAction)) {
       setStep(3); // Move to success step
     }
   };
 
   return (
-    <div className="flex flex-col lg:flex-row w-full min-h-screen bg-white text-neutral-900 pt-[72px] md:pt-[88px]">
+    <div className="flex flex-col lg:flex-row w-full min-h-screen bg-white text-neutral-900 pt-18 md:pt-22">
       
       {/* LEFT COLUMN - Authentication Form */}
       <div className="w-full lg:w-1/2 flex flex-col justify-center px-8 md:px-16 lg:px-24 py-12 lg:py-20 relative bg-white">
         
-        <div className="max-w-md w-full mx-auto min-h-[500px] flex flex-col justify-center">
+        <div className="max-w-md w-full mx-auto min-h-125 flex flex-col justify-center">
           
           <AnimatePresence mode="wait">
             {step === 1 && (
@@ -297,7 +296,7 @@ export default function RegisterPage() {
 
       {/* RIGHT COLUMN - Visual/Branding (Hidden on smaller screens) */}
       <div className="hidden lg:block w-1/2 relative bg-[#FAFAFA] p-8 lg:p-12 lg:pt-8">
-        <div className="sticky top-[104px] h-[calc(100vh-140px)] w-full flex flex-col justify-between overflow-hidden rounded-3xl shadow-sm">
+        <div className="sticky top-26 h-[calc(100vh-140px)] w-full flex flex-col justify-between overflow-hidden rounded-3xl shadow-sm">
           <motion.div 
             initial={{ opacity: 0 }} 
             animate={{ opacity: 1 }} 

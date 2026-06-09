@@ -2,7 +2,7 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useAppDispatch } from "@/redux/store";
+import { useVerifyEmail } from "@/features/auth/hooks/useVerifyEmail";
 import { verifyEmail } from "@/features/auth/slice";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -10,8 +10,8 @@ import { motion } from "framer-motion";
 function VerifyEmailContent() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
-  const dispatch = useAppDispatch();
   const router = useRouter();
+  const { verify, isLoading, error } = useVerifyEmail();
 
   const [status, setStatus] = useState<"loading" | "success" | "error">(
     !token ? "error" : "loading"
@@ -25,8 +25,8 @@ function VerifyEmailContent() {
       return;
     }
 
-    const verify = async () => {
-      const resultAction = await dispatch(verifyEmail(token));
+    const runVerify = async () => {
+      const resultAction = await verify(token);
       if (verifyEmail.fulfilled.match(resultAction)) {
         setStatus("success");
         setTimeout(() => {
@@ -38,8 +38,8 @@ function VerifyEmailContent() {
       }
     };
 
-    verify();
-  }, [token, dispatch, router]);
+    runVerify();
+  }, [token, verify, router]);
 
   return (
     <div className="flex flex-col items-center justify-center w-full min-h-[60vh]">
@@ -98,7 +98,7 @@ function VerifyEmailContent() {
 
 export default function VerifyEmailPage() {
   return (
-    <div className="min-h-screen pt-[88px] bg-neutral-50 flex items-center justify-center p-4">
+    <div className="min-h-screen pt-22 bg-neutral-50 flex items-center justify-center p-4">
       <Suspense fallback={<div className="animate-pulse">Loading...</div>}>
         <VerifyEmailContent />
       </Suspense>
