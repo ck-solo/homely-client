@@ -4,9 +4,12 @@ import { motion } from "motion/react";
 import Link from "next/link";
 import { ArrowRight, List } from "@phosphor-icons/react";
 import { useState } from "react";
+import { useAppSelector } from "@/redux/store";
+import UserDetails from "./UserDetails";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { isAuthenticated, user } = useAppSelector((state) => state.auth);
 
   return (
     <motion.header
@@ -33,15 +36,19 @@ export default function Navbar() {
         >
           List Property
         </Link>
-        <Link href="/login">
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="flex items-center gap-2 bg-neutral-900 text-white px-5 py-2.5 rounded-full text-sm hover:bg-neutral-800 transition-colors"
-          >
-            Get Started <ArrowRight size={16} />
-          </motion.button>
-        </Link>
+        {isAuthenticated && user ? (
+          <UserDetails user={user} />
+        ) : (
+          <Link href="/login">
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="flex items-center gap-2 bg-neutral-900 text-white px-5 py-2.5 rounded-full text-sm hover:bg-neutral-800 transition-colors"
+            >
+              Get Started <ArrowRight size={16} />
+            </motion.button>
+          </Link>
+        )}
       </div>
 
       {/* Mobile Menu Toggle (PWA friendly) */}
