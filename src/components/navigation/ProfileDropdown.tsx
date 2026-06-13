@@ -13,9 +13,9 @@ export default function ProfileDropdown({ onClose }: ProfileDropdownProps) {
   const router = useRouter();
   const { logout } = useLogout();
 
-  const handleUpdateProfile = () => {
+  const handleViewProfile = () => {
     onClose();
-    router.push("/profile/update");
+    router.push("/profile");
   };
 
   const handleLogout = async () => {
@@ -33,11 +33,11 @@ export default function ProfileDropdown({ onClose }: ProfileDropdownProps) {
       className="absolute right-0 mt-2 w-48 bg-white border border-neutral-200/80 rounded-2xl shadow-lg py-2 z-50 overflow-hidden text-sm"
     >
       <button
-        onClick={handleUpdateProfile}
+        onClick={handleViewProfile}
         className="w-full flex items-center gap-3 px-4 py-3 text-left text-neutral-700 hover:bg-neutral-50 transition-colors font-light"
       >
         <User size={16} weight="light" />
-        Update profile
+        View Profile
       </button>
 
       <div className="border-t border-neutral-100 my-1" />
