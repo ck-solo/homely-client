@@ -24,7 +24,7 @@ export default function Navbar() {
 
       {/* Desktop Nav */}
       <nav className="hidden md:flex items-center gap-8 text-sm text-neutral-600">
-        <NavLink href="#find-room">Find a Room</NavLink>
+        <NavLink href="/listings">Explore</NavLink>
         <NavLink href="#roommates">Roommates</NavLink>
         <NavLink href="#vibe-match">Vibe Match</NavLink>
       </nav>
