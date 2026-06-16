@@ -21,6 +21,7 @@ export default function Navbar() {
   }, []);
 
   return (
+    <>
     <motion.header
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
@@ -46,21 +47,7 @@ export default function Navbar() {
           List Property
         </Link>
 
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-8 text-sm text-neutral-600">
-          <NavLink href="#find-room">Find a Room</NavLink>
-          <NavLink href="#roommates">Roommates</NavLink>
-          <NavLink href="#vibe-match">Vibe Match</NavLink>
-        </nav>
-
-        <div className="hidden md:flex items-center gap-4">
-          <Link 
-            href="/list-property" 
-            className="text-sm text-neutral-600 hover:text-neutral-900 transition-colors"
-          >
-            List Property
-          </Link>
-          {mounted ? (
+        {mounted ? (
             isAuthenticated && user ? (
               <UserDetails user={user} />
             ) : (
@@ -131,8 +118,8 @@ export default function Navbar() {
               )}
 
               <div className="flex flex-col gap-1">
-                <MobileNavLink href="#find-room" onClick={() => setIsOpen(false)}>
-                  Find a Room
+                <MobileNavLink href="/listings" onClick={() => setIsOpen(false)}>
+                  Explore
                 </MobileNavLink>
                 <MobileNavLink href="#roommates" onClick={() => setIsOpen(false)}>
                   Roommates

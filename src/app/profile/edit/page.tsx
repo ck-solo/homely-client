@@ -8,12 +8,12 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {
-  ArrowLeft,
-  Camera,
-  Spinner,
-  X,
-  FloppyDisk,
-  CloudArrowUp,
+  ArrowLeftIcon,
+  CameraIcon,
+  SpinnerIcon,
+  XIcon,
+  FloppyDiskIcon,
+  CloudArrowUpIcon,
 } from "@phosphor-icons/react";
 import { useGetProfile } from "@/features/profile/hooks/useGetProfile";
 import { useUpdateProfile } from "@/features/profile/hooks/useUpdateProfile";
@@ -28,18 +28,32 @@ const baseSchema = z.object({
     .max(100, "Name cannot exceed 100 characters"),
   phone: z
     .string()
-    .regex(/^\+?[1-9]\d{1,14}$/, "Please enter a valid phone number (E.164 format)")
+    .regex(
+      /^\+?[1-9]\d{1,14}$/,
+      "Please enter a valid phone number (E.164 format)",
+    )
     .or(z.literal(""))
     .optional(),
 });
 
 const tenantSchema = baseSchema.extend({
-  bio: z.string().max(500, "Bio cannot exceed 500 characters").optional().or(z.literal("")),
-  occupation: z.string().max(100, "Occupation is too long").optional().or(z.literal("")),
+  bio: z
+    .string()
+    .max(500, "Bio cannot exceed 500 characters")
+    .optional()
+    .or(z.literal("")),
+  occupation: z
+    .string()
+    .max(100, "Occupation is too long")
+    .optional()
+    .or(z.literal("")),
   city: z.string().min(1, "City is required"),
-  gender: z.enum(["MALE", "FEMALE", "NON_BINARY", "OTHER", "PREFER_NOT_TO_SAY"], {
-    error: "Gender is required",
-  }),
+  gender: z.enum(
+    ["MALE", "FEMALE", "NON_BINARY", "OTHER", "PREFER_NOT_TO_SAY"],
+    {
+      error: "Gender is required",
+    },
+  ),
   age: z
     .number({ error: "Age is required and must be a number" })
     .min(18, "Must be at least 18")
@@ -47,7 +61,9 @@ const tenantSchema = baseSchema.extend({
   // Roommate Preferences
   budgetMin: z.number().min(0, "Cannot be negative").optional().or(z.nan()),
   budgetMax: z.number().min(0, "Cannot be negative").optional().or(z.nan()),
-  foodHabits: z.enum(["VEGETARIAN", "NON_VEGETARIAN", "VEGAN", "ANY"]).optional(),
+  foodHabits: z
+    .enum(["VEGETARIAN", "NON_VEGETARIAN", "VEGAN", "ANY"])
+    .optional(),
   smokingPreference: z.boolean().optional(),
   sleepingSchedule: z.enum(["EARLY_BIRD", "NIGHT_OWL", "FLEXIBLE"]).optional(),
   lifestyleDetails: z.string().optional().or(z.literal("")),
@@ -67,7 +83,9 @@ const ownerSchema = baseSchema.extend({
 
 type TenantFormData = z.infer<typeof tenantSchema>;
 type OwnerFormData = z.infer<typeof ownerSchema>;
-type FormData = TenantFormData | OwnerFormData;
+type FormData = z.infer<typeof baseSchema> &
+  Partial<TenantFormData> &
+  Partial<OwnerFormData>;
 
 /* ─── Constants ─── */
 
@@ -99,7 +117,9 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 export default function ProfileEditPage() {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
-  const { isAuthenticated, user: authUser } = useAppSelector((state) => state.auth);
+  const { isAuthenticated, user: authUser } = useAppSelector(
+    (state) => state.auth,
+  );
   const { data: profileData, isLoading: isProfileLoading } = useGetProfile();
   const { mutate: updateProfile, isPending: isUpdating } = useUpdateProfile();
 
@@ -152,9 +172,12 @@ export default function ProfileEditPage() {
         budgetMin: profile?.roommatePreferences?.budget?.min || 0,
         budgetMax: profile?.roommatePreferences?.budget?.max || 0,
         foodHabits: profile?.roommatePreferences?.foodHabits || "ANY",
-        smokingPreference: profile?.roommatePreferences?.smokingPreference || false,
-        sleepingSchedule: profile?.roommatePreferences?.sleepingSchedule || "FLEXIBLE",
-        lifestyleDetails: profile?.roommatePreferences?.lifestyleDetails?.join(", ") || "",
+        smokingPreference:
+          profile?.roommatePreferences?.smokingPreference || false,
+        sleepingSchedule:
+          profile?.roommatePreferences?.sleepingSchedule || "FLEXIBLE",
+        lifestyleDetails:
+          profile?.roommatePreferences?.lifestyleDetails?.join(", ") || "",
       } as TenantFormData);
     } else if (role === "OWNER") {
       reset({
@@ -170,7 +193,7 @@ export default function ProfileEditPage() {
     if (existingPicture && !existingPicture.includes("man-user-circle-icon")) {
       timer = setTimeout(() => setPreviewUrl(existingPicture), 0);
     }
-    
+
     return () => clearTimeout(timer);
   }, [profileData, role, reset]);
 
@@ -178,13 +201,13 @@ export default function ProfileEditPage() {
   const handleFileSelect = useCallback((file: File) => {
     if (file.size > MAX_FILE_SIZE) {
       import("react-hot-toast").then(({ default: toast }) =>
-        toast.error("File size must be under 5MB")
+        toast.error("File size must be under 5MB"),
       );
       return;
     }
     if (!file.type.startsWith("image/")) {
       import("react-hot-toast").then(({ default: toast }) =>
-        toast.error("Please select an image file")
+        toast.error("Please select an image file"),
       );
       return;
     }
@@ -199,7 +222,7 @@ export default function ProfileEditPage() {
       const file = e.dataTransfer.files[0];
       if (file) handleFileSelect(file);
     },
-    [handleFileSelect]
+    [handleFileSelect],
   );
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
@@ -230,7 +253,8 @@ export default function ProfileEditPage() {
     if (role === "TENANT") {
       const tenantData = data as TenantFormData;
       if (tenantData.bio) formData.append("bio", tenantData.bio);
-      if (tenantData.occupation) formData.append("occupation", tenantData.occupation);
+      if (tenantData.occupation)
+        formData.append("occupation", tenantData.occupation);
       formData.append("city", tenantData.city);
       formData.append("gender", tenantData.gender);
       formData.append("age", String(tenantData.age));
@@ -245,14 +269,21 @@ export default function ProfileEditPage() {
         smokingPreference: tenantData.smokingPreference || false,
         sleepingSchedule: tenantData.sleepingSchedule || "FLEXIBLE",
         lifestyleDetails: tenantData.lifestyleDetails
-          ? tenantData.lifestyleDetails.split(",").map((s) => s.trim()).filter(Boolean)
+          ? tenantData.lifestyleDetails
+              .split(",")
+              .map((s) => s.trim())
+              .filter(Boolean)
           : [],
       };
-      formData.append("roommatePreferences", JSON.stringify(roommatePreferences));
+      formData.append(
+        "roommatePreferences",
+        JSON.stringify(roommatePreferences),
+      );
     } else if (role === "OWNER") {
       const ownerData = data as OwnerFormData;
       formData.append("businessName", ownerData.businessName);
-      if (ownerData.businessDetails) formData.append("businessDetails", ownerData.businessDetails);
+      if (ownerData.businessDetails)
+        formData.append("businessDetails", ownerData.businessDetails);
     }
 
     // Profile picture file
@@ -271,7 +302,7 @@ export default function ProfileEditPage() {
   if (!mounted) {
     return (
       <div className="min-h-screen flex items-center justify-center pt-24">
-        <Spinner size={32} className="text-neutral-400 animate-spin" />
+        <SpinnerIcon size={32} className="text-neutral-400 animate-spin" />
       </div>
     );
   }
@@ -285,7 +316,7 @@ export default function ProfileEditPage() {
           animate={{ rotate: 360 }}
           transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
         >
-          <Spinner size={32} className="text-neutral-400" />
+          <SpinnerIcon size={32} className="text-neutral-400" />
         </motion.div>
       </div>
     );
@@ -304,7 +335,7 @@ export default function ProfileEditPage() {
             onClick={() => router.back()}
             className="flex items-center gap-2 text-sm text-neutral-500 hover:text-neutral-900 transition-colors mb-4 group"
           >
-            <ArrowLeft
+            <ArrowLeftIcon
               size={16}
               className="group-hover:-translate-x-0.5 transition-transform"
             />
@@ -344,7 +375,7 @@ export default function ProfileEditPage() {
                   </div>
                 ) : (
                   <div className="w-20 h-20 rounded-2xl bg-neutral-100 flex items-center justify-center border-2 border-neutral-200/60">
-                    <Camera size={24} className="text-neutral-400" />
+                    <CameraIcon size={24} className="text-neutral-400" />
                   </div>
                 )}
                 {previewUrl && (
@@ -353,7 +384,7 @@ export default function ProfileEditPage() {
                     onClick={removeFile}
                     className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
                   >
-                    <X size={12} weight="bold" />
+                    <XIcon size={12} weight="bold" />
                   </button>
                 )}
               </div>
@@ -370,7 +401,7 @@ export default function ProfileEditPage() {
                     : "border-neutral-200/80 hover:border-neutral-300 hover:bg-neutral-50/50"
                 }`}
               >
-                <CloudArrowUp
+                <CloudArrowUpIcon
                   size={28}
                   weight="light"
                   className={`mx-auto mb-2 transition-colors ${isDragOver ? "text-neutral-900" : "text-neutral-400"}`}
@@ -433,39 +464,36 @@ export default function ProfileEditPage() {
               <div className="px-6 sm:px-8 py-6">
                 <SectionTitle>Tenant Details</SectionTitle>
                 <div className="grid grid-cols-1 gap-4 mt-4">
-                  <FormField
-                    label="Bio"
-                    error={(errors as any).bio?.message}
-                  >
+                  <FormField label="Bio" error={errors.bio?.message}>
                     <textarea
-                      {...register("bio" as any)}
+                      {...register("bio")}
                       rows={3}
                       placeholder="Tell others about yourself..."
-                      className={`${inputClass((errors as any).bio)} resize-none`}
+                      className={`${inputClass(errors.bio)} resize-none`}
                     />
                   </FormField>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <FormField
                       label="Occupation"
-                      error={(errors as any).occupation?.message}
+                      error={errors.occupation?.message}
                     >
                       <input
-                        {...register("occupation" as any)}
+                        {...register("occupation")}
                         placeholder="e.g. Software Engineer"
-                        className={inputClass((errors as any).occupation)}
+                        className={inputClass(errors.occupation)}
                       />
                     </FormField>
 
                     <FormField
                       label="City"
                       required
-                      error={(errors as any).city?.message}
+                      error={errors.city?.message}
                     >
                       <input
-                        {...register("city" as any)}
+                        {...register("city")}
                         placeholder="e.g. Mumbai"
-                        className={inputClass((errors as any).city)}
+                        className={inputClass(errors.city)}
                       />
                     </FormField>
                   </div>
@@ -474,13 +502,16 @@ export default function ProfileEditPage() {
                     <FormField
                       label="Gender"
                       required
-                      error={(errors as any).gender?.message}
+                      error={errors.gender?.message}
                     >
                       <Controller
-                        name={"gender" as any}
+                        name={"gender"}
                         control={control}
                         render={({ field }) => (
-                          <select {...field} className={selectClass((errors as any).gender)}>
+                          <select
+                            {...field}
+                            className={selectClass(errors.gender)}
+                          >
                             <option value="">Select gender</option>
                             {GENDER_OPTIONS.map((opt) => (
                               <option key={opt.value} value={opt.value}>
@@ -492,13 +523,9 @@ export default function ProfileEditPage() {
                       />
                     </FormField>
 
-                    <FormField
-                      label="Age"
-                      required
-                      error={(errors as any).age?.message}
-                    >
+                    <FormField label="Age" required error={errors.age?.message}>
                       <Controller
-                        name={"age" as any}
+                        name={"age"}
                         control={control}
                         render={({ field }) => (
                           <input
@@ -506,11 +533,13 @@ export default function ProfileEditPage() {
                             {...field}
                             onChange={(e) =>
                               field.onChange(
-                                e.target.value ? Number(e.target.value) : undefined
+                                e.target.value
+                                  ? Number(e.target.value)
+                                  : undefined,
                               )
                             }
                             placeholder="e.g. 25"
-                            className={inputClass((errors as any).age)}
+                            className={inputClass(errors.age)}
                           />
                         )}
                       />
@@ -527,10 +556,10 @@ export default function ProfileEditPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <FormField
                       label="Min Budget (₹)"
-                      error={(errors as any).budgetMin?.message}
+                      error={errors.budgetMin?.message}
                     >
                       <Controller
-                        name={"budgetMin" as any}
+                        name={"budgetMin"}
                         control={control}
                         render={({ field }) => (
                           <input
@@ -538,11 +567,11 @@ export default function ProfileEditPage() {
                             {...field}
                             onChange={(e) =>
                               field.onChange(
-                                e.target.value ? Number(e.target.value) : 0
+                                e.target.value ? Number(e.target.value) : 0,
                               )
                             }
                             placeholder="e.g. 5000"
-                            className={inputClass((errors as any).budgetMin)}
+                            className={inputClass(errors.budgetMin)}
                           />
                         )}
                       />
@@ -550,10 +579,10 @@ export default function ProfileEditPage() {
 
                     <FormField
                       label="Max Budget (₹)"
-                      error={(errors as any).budgetMax?.message}
+                      error={errors.budgetMax?.message}
                     >
                       <Controller
-                        name={"budgetMax" as any}
+                        name={"budgetMax"}
                         control={control}
                         render={({ field }) => (
                           <input
@@ -561,11 +590,11 @@ export default function ProfileEditPage() {
                             {...field}
                             onChange={(e) =>
                               field.onChange(
-                                e.target.value ? Number(e.target.value) : 0
+                                e.target.value ? Number(e.target.value) : 0,
                               )
                             }
                             placeholder="e.g. 15000"
-                            className={inputClass((errors as any).budgetMax)}
+                            className={inputClass(errors.budgetMax)}
                           />
                         )}
                       />
@@ -575,13 +604,16 @@ export default function ProfileEditPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <FormField
                       label="Food Habits"
-                      error={(errors as any).foodHabits?.message}
+                      error={errors.foodHabits?.message}
                     >
                       <Controller
-                        name={"foodHabits" as any}
+                        name={"foodHabits"}
                         control={control}
                         render={({ field }) => (
-                          <select {...field} className={selectClass((errors as any).foodHabits)}>
+                          <select
+                            {...field}
+                            className={selectClass(errors.foodHabits)}
+                          >
                             {FOOD_OPTIONS.map((opt) => (
                               <option key={opt.value} value={opt.value}>
                                 {opt.label}
@@ -594,15 +626,15 @@ export default function ProfileEditPage() {
 
                     <FormField
                       label="Sleep Schedule"
-                      error={(errors as any).sleepingSchedule?.message}
+                      error={errors.sleepingSchedule?.message}
                     >
                       <Controller
-                        name={"sleepingSchedule" as any}
+                        name={"sleepingSchedule"}
                         control={control}
                         render={({ field }) => (
                           <select
                             {...field}
-                            className={selectClass((errors as any).sleepingSchedule)}
+                            className={selectClass(errors.sleepingSchedule)}
                           >
                             {SLEEP_OPTIONS.map((opt) => (
                               <option key={opt.value} value={opt.value}>
@@ -617,7 +649,7 @@ export default function ProfileEditPage() {
 
                   <FormField label="Smoking Preference">
                     <Controller
-                      name={"smokingPreference" as any}
+                      name={"smokingPreference"}
                       control={control}
                       render={({ field }) => (
                         <label className="flex items-center gap-3 cursor-pointer group">
@@ -632,7 +664,9 @@ export default function ProfileEditPage() {
                             <div className="absolute top-0.5 left-0.5 w-4.5 h-4.5 bg-white rounded-full shadow-sm peer-checked:translate-x-[18px] transition-transform duration-200" />
                           </div>
                           <span className="text-sm text-neutral-600 group-hover:text-neutral-900 transition-colors">
-                            {field.value ? "Smoker-friendly" : "Non-smoker preferred"}
+                            {field.value
+                              ? "Smoker-friendly"
+                              : "Non-smoker preferred"}
                           </span>
                         </label>
                       )}
@@ -641,12 +675,12 @@ export default function ProfileEditPage() {
 
                   <FormField
                     label="Lifestyle Details"
-                    error={(errors as any).lifestyleDetails?.message}
+                    error={errors.lifestyleDetails?.message}
                   >
                     <input
-                      {...register("lifestyleDetails" as any)}
+                      {...register("lifestyleDetails")}
                       placeholder="e.g. Gym, Reading, Gaming (comma separated)"
-                      className={inputClass((errors as any).lifestyleDetails)}
+                      className={inputClass(errors.lifestyleDetails)}
                     />
                     <p className="text-[11px] text-neutral-400 mt-1.5">
                       Separate multiple lifestyle interests with commas
@@ -667,24 +701,24 @@ export default function ProfileEditPage() {
                   <FormField
                     label="Business Name"
                     required
-                    error={(errors as any).businessName?.message}
+                    error={errors.businessName?.message}
                   >
                     <input
-                      {...register("businessName" as any)}
+                      {...register("businessName")}
                       placeholder="Your business or company name"
-                      className={inputClass((errors as any).businessName)}
+                      className={inputClass(errors.businessName)}
                     />
                   </FormField>
 
                   <FormField
                     label="Business Details"
-                    error={(errors as any).businessDetails?.message}
+                    error={errors.businessDetails?.message}
                   >
                     <textarea
-                      {...register("businessDetails" as any)}
+                      {...register("businessDetails")}
                       rows={4}
                       placeholder="Describe your business, services offered, etc."
-                      className={`${inputClass((errors as any).businessDetails)} resize-none`}
+                      className={`${inputClass(errors.businessDetails)} resize-none`}
                     />
                   </FormField>
                 </div>
@@ -719,15 +753,19 @@ export default function ProfileEditPage() {
                   <>
                     <motion.span
                       animate={{ rotate: 360 }}
-                      transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                      transition={{
+                        repeat: Infinity,
+                        duration: 1,
+                        ease: "linear",
+                      }}
                     >
-                      <Spinner size={16} />
+                      <SpinnerIcon size={16} />
                     </motion.span>
                     Saving...
                   </>
                 ) : (
                   <>
-                    <FloppyDisk size={16} />
+                    <FloppyDiskIcon size={16} />
                     Save Changes
                   </>
                 )}
@@ -786,7 +824,7 @@ function FormField({
 
 /* ─── Styling Helpers ─── */
 
-function inputClass(error?: any) {
+function inputClass(error?: { message?: string }) {
   return `w-full px-4 py-2.5 text-sm bg-white border rounded-xl outline-none transition-all duration-200 placeholder:text-neutral-400 ${
     error
       ? "border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100"
@@ -794,7 +832,7 @@ function inputClass(error?: any) {
   }`;
 }
 
-function selectClass(error?: any) {
+function selectClass(error?: { message?: string }) {
   return `w-full px-4 py-2.5 text-sm bg-white border rounded-xl outline-none transition-all duration-200 appearance-none cursor-pointer ${
     error
       ? "border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100"

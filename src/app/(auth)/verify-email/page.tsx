@@ -11,7 +11,7 @@ function VerifyEmailContent() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   const router = useRouter();
-  const { verify, isLoading, error } = useVerifyEmail();
+  const { verify } = useVerifyEmail();
 
   const [status, setStatus] = useState<"loading" | "success" | "error">(
     !token ? "error" : "loading"

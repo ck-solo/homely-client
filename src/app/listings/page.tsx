@@ -4,7 +4,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { useState, useCallback, useEffect, Suspense } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { HouseLine, MagnifyingGlass, SmileySad } from "@phosphor-icons/react";
+import { HouseLineIcon, SmileySadIcon } from "@phosphor-icons/react";
 
 import api from "@/lib/axios";
 import { useDebounce } from "@/lib/useDebounce";
@@ -15,12 +15,13 @@ import FilterPanel, {
 } from "@/components/listings/FilterPanel";
 import ListingCard, {
   ListingCardSkeleton,
+  type Listing,
 } from "@/components/listings/ListingCard";
 
 // ─── API Fetcher ────────────────────────────────────────
 interface ListingsResponse {
   success: boolean;
-  data: any[];
+  data: Listing[];
   total: number;
   page: number;
   limit: number;
@@ -29,7 +30,7 @@ interface ListingsResponse {
 const fetchListings = async (params: Record<string, string>): Promise<ListingsResponse> => {
   // Remove empty params
   const cleanParams = Object.fromEntries(
-    Object.entries(params).filter(([_, v]) => v !== "" && v !== undefined)
+    Object.entries(params).filter(([, v]) => v !== "" && v !== undefined)
   );
 
   const { data } = await api.get("/listings", { params: cleanParams });
@@ -84,8 +85,8 @@ function ListingsPageInner() {
     });
 
     const queryString = urlParams.toString();
-    const newUrl = queryString ? `?${queryString}` : "/listings";
-    router.replace(`/listings${newUrl}`, { scroll: false });
+    const newUrl = queryString ? `/listings?${queryString}` : "/listings";
+    router.replace(newUrl, { scroll: false });
   }, [buildQueryParams, router]);
 
   // ─── TanStack Query ───────────────────────────────────
@@ -95,7 +96,6 @@ function ListingsPageInner() {
     data: response,
     isLoading,
     isError,
-    error,
     isFetching,
   } = useQuery({
     queryKey: ["listings", queryParams],
@@ -181,7 +181,7 @@ function ListingsPageInner() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed top-0 left-0 right-0 z-[60] h-0.5"
+              className="fixed top-0 left-0 right-0 z-60 h-0.5"
             >
               <div className="h-full bg-neutral-900 animate-pulse rounded-full" />
             </motion.div>
@@ -191,7 +191,7 @@ function ListingsPageInner() {
         {/* ─── Listings Grid ──── */}
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-            {Array.from({ length: 8 }).map((_, i) => (
+            {Array.from(Array(8).keys()).map((i) => (
               <ListingCardSkeleton key={i} index={i} />
             ))}
           </div>
@@ -202,7 +202,7 @@ function ListingsPageInner() {
             className="flex flex-col items-center justify-center py-24 text-center"
           >
             <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center mb-4">
-              <SmileySad size={32} weight="light" className="text-red-400" />
+              <SmileySadIcon size={32} weight="light" className="text-red-400" />
             </div>
             <h3 className="text-lg font-semibold text-neutral-900 mb-2">
               Something went wrong
@@ -218,7 +218,7 @@ function ListingsPageInner() {
             className="flex flex-col items-center justify-center py-24 text-center"
           >
             <div className="w-16 h-16 rounded-full bg-neutral-100 flex items-center justify-center mb-4">
-              <HouseLine size={32} weight="light" className="text-neutral-400" />
+              <HouseLineIcon size={32} weight="light" className="text-neutral-400" />
             </div>
             <h3 className="text-lg font-semibold text-neutral-900 mb-2">
               No listings found
@@ -239,7 +239,7 @@ function ListingsPageInner() {
         ) : (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-              {listings.map((listing: any, idx: number) => (
+              {listings.map((listing: Listing, idx: number) => (
                 <ListingCard key={listing._id} listing={listing} index={idx} />
               ))}
             </div>
@@ -262,7 +262,7 @@ function ListingsPageInner() {
                 </button>
 
                 <div className="flex items-center gap-1">
-                  {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+                  {Array.from(Array(Math.min(totalPages, 5)).keys()).map((i) => {
                     let pageNum: number;
                     if (totalPages <= 5) {
                       pageNum = i + 1;
@@ -321,7 +321,7 @@ export default function ListingsPage() {
             <div className="h-12 w-64 bg-neutral-100 rounded-xl animate-pulse mb-8" />
             <div className="h-12 w-full max-w-2xl bg-neutral-100 rounded-2xl animate-pulse mb-10" />
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-              {Array.from({ length: 8 }).map((_, i) => (
+              {Array.from(Array(8).keys()).map((i) => (
                 <ListingCardSkeleton key={i} index={i} />
               ))}
             </div>

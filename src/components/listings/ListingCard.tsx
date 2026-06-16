@@ -1,11 +1,11 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Heart, MapPin, Bed, Bathtub, ArrowsOutSimple } from "@phosphor-icons/react";
+import { HeartIcon, MapPinIcon, BedIcon } from "@phosphor-icons/react";
 import Image from "next/image";
 
 // ─── Types ──────────────────────────────────────────────
-interface Listing {
+export interface Listing {
   _id: string;
   title: string;
   city: string;
@@ -66,7 +66,7 @@ export default function ListingCard({ listing, index = 0 }: ListingCardProps) {
       id={`listing-card-${_id}`}
     >
       {/* ─── Image Container ──── */}
-      <div className="relative aspect-[4/3] overflow-hidden bg-neutral-100">
+      <div className="relative aspect-4/3 overflow-hidden bg-neutral-100">
         {images && images.length > 0 ? (
           <Image
             src={images[0]}
@@ -77,12 +77,12 @@ export default function ListingCard({ listing, index = 0 }: ListingCardProps) {
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center bg-neutral-50">
-            <Bed size={40} weight="light" className="text-neutral-300" />
+            <BedIcon size={40} weight="light" className="text-neutral-300" />
           </div>
         )}
 
         {/* Overlay gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
         {/* Favorite button */}
         <button
@@ -90,7 +90,7 @@ export default function ListingCard({ listing, index = 0 }: ListingCardProps) {
           aria-label="Add to favorites"
           id={`favorite-btn-${_id}`}
         >
-          <Heart size={18} weight="regular" />
+          <HeartIcon size={18} weight="regular" />
         </button>
 
         {/* Price Badge */}
@@ -111,7 +111,7 @@ export default function ListingCard({ listing, index = 0 }: ListingCardProps) {
 
         {/* Location */}
         <div className="flex items-center gap-1 mt-1.5">
-          <MapPin size={13} weight="fill" className="text-neutral-400 shrink-0" />
+          <MapPinIcon size={13} weight="fill" className="text-neutral-400 shrink-0" />
           <span className="text-xs text-neutral-500 truncate">{city}</span>
         </div>
 
@@ -146,7 +146,7 @@ export function ListingCardSkeleton({ index = 0 }: { index?: number }) {
       transition={{ delay: index * 0.05 }}
       className="bg-white rounded-2xl overflow-hidden border border-neutral-100"
     >
-      <div className="aspect-[4/3] bg-neutral-100 animate-pulse" />
+      <div className="aspect-4/3 bg-neutral-100 animate-pulse" />
       <div className="p-4 space-y-3">
         <div className="h-4 bg-neutral-100 rounded-lg w-3/4 animate-pulse" />
         <div className="h-3 bg-neutral-100 rounded-lg w-1/2 animate-pulse" />

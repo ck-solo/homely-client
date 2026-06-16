@@ -22,8 +22,9 @@ export default function ForgotPasswordPage() {
     try {
       const response = await forgotPassword(email);
       setSuccess(response?.message || "If this email exists, a reset link has been sent.");
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Failed to process request. Please try again.");
+    } catch (err) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setError(error.response?.data?.message || "Failed to process request. Please try again.");
     } finally {
       setIsLoading(false);
     }

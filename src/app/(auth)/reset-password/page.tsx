@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "@phosphor-icons/react";
+import { ArrowRightIcon } from "@phosphor-icons/react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { resetPassword } from "@/api/password/resetPassword";
 
@@ -18,14 +18,12 @@ export default function ResetPasswordPage() {
     confirmPassword: "",
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(
+    !token
+      ? "Invalid or missing reset token. Please request a new password reset link."
+      : null,
+  );
   const [success, setSuccess] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!token) {
-      setError("Invalid or missing reset token. Please request a new password reset link.");
-    }
-  }, [token]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -51,19 +49,32 @@ export default function ResetPasswordPage() {
         password: formData.password,
         confirmPassword: formData.confirmPassword,
       });
-      setSuccess(response?.message || "Password has been successfully reset. You can now log in.");
-      
+      setSuccess(
+        response?.message ||
+          "Password has been successfully reset. You can now log in.",
+      );
+
       // Redirect to login after 3 seconds
       setTimeout(() => {
         router.push("/login");
       }, 3000);
-    } catch (err: any) {
+    } catch (err) {
+      const apiError = err as {
+        response?: {
+          data?: { message?: string; errors?: { message: string }[] };
+        };
+      };
       // The API error response format: err.response.data.message or err.response.data.errors array
       let errorMessage = "Failed to process request. Please try again.";
-      if (err.response?.data?.errors?.length > 0) {
-        errorMessage = err.response.data.errors.map((e: any) => e.message).join(", ");
-      } else if (err.response?.data?.message) {
-        errorMessage = err.response.data.message;
+      if (
+        apiError.response?.data?.errors &&
+        apiError.response.data.errors.length > 0
+      ) {
+        errorMessage = apiError.response.data.errors
+          .map((e) => e.message)
+          .join(", ");
+      } else if (apiError.response?.data?.message) {
+        errorMessage = apiError.response.data.message;
       }
       setError(errorMessage);
     } finally {
@@ -73,12 +84,10 @@ export default function ResetPasswordPage() {
 
   return (
     <div className="flex flex-col lg:flex-row w-full min-h-screen bg-white text-neutral-900 pt-18 md:pt-22">
-      
       {/* LEFT COLUMN - Form */}
       <div className="w-full lg:w-1/2 flex flex-col justify-center px-8 md:px-16 lg:px-24 py-12 lg:py-20 relative bg-white">
-        
         <div className="max-w-md w-full mx-auto">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -106,14 +115,13 @@ export default function ResetPasswordPage() {
 
           {/* FORM */}
           {!success && (
-            <form 
-              className="flex flex-col gap-5"
-              onSubmit={handleSubmit}
-            >
+            <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
               <div className="flex flex-col gap-2">
-                <label className="text-sm text-neutral-600 ml-1">New Password</label>
-                <input 
-                  type="password" 
+                <label className="text-sm text-neutral-600 ml-1">
+                  New Password
+                </label>
+                <input
+                  type="password"
                   name="password"
                   required
                   value={formData.password}
@@ -125,9 +133,11 @@ export default function ResetPasswordPage() {
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="text-sm text-neutral-600 ml-1">Confirm New Password</label>
-                <input 
-                  type="password" 
+                <label className="text-sm text-neutral-600 ml-1">
+                  Confirm New Password
+                </label>
+                <input
+                  type="password"
                   name="confirmPassword"
                   required
                   value={formData.confirmPassword}
@@ -145,36 +155,38 @@ export default function ResetPasswordPage() {
                 className="mt-4 w-full flex items-center justify-center gap-2 bg-neutral-900 text-white px-6 py-3.5 rounded-xl text-sm font-medium hover:bg-neutral-800 transition-colors group disabled:opacity-70"
               >
                 {isLoading ? "Resetting..." : "Reset Password"}
-                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                <ArrowRightIcon
+                  size={16}
+                  className="group-hover:translate-x-1 transition-transform"
+                />
               </motion.button>
             </form>
           )}
 
           <p className="mt-8 text-center text-sm text-neutral-500">
-            <Link 
-              href="/login" 
+            <Link
+              href="/login"
               className="text-neutral-900 underline underline-offset-4 hover:text-neutral-600 transition-colors"
             >
               Back to Sign In
             </Link>
           </p>
-
         </div>
       </div>
 
       {/* RIGHT COLUMN - Visual/Branding (Hidden on smaller screens) */}
       <div className="hidden lg:block w-1/2 relative bg-[#FAFAFA] p-8 lg:p-12 lg:pt-8">
         <div className="sticky top-26 h-[calc(100vh-140px)] w-full flex flex-col justify-between overflow-hidden rounded-3xl shadow-sm">
-          <motion.div 
-            initial={{ opacity: 0 }} 
-            animate={{ opacity: 1 }} 
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ duration: 1 }}
             className="absolute inset-0"
           >
-            <Image 
-              src="/Homely1.jpg" 
-              alt="Interior space" 
-              fill 
+            <Image
+              src="/Homely1.jpg"
+              alt="Interior space"
+              fill
               className="object-cover"
               priority
             />
@@ -182,7 +194,7 @@ export default function ResetPasswordPage() {
           </motion.div>
 
           <div className="relative z-10 p-10 md:p-14 mt-auto">
-            <motion.h2 
+            <motion.h2
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.8 }}
@@ -193,7 +205,6 @@ export default function ResetPasswordPage() {
           </div>
         </div>
       </div>
-
     </div>
   );
 }

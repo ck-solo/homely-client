@@ -3,39 +3,47 @@
 import { motion } from "framer-motion";
 import { useAppSelector } from "@/redux/store";
 import { 
-  House, 
-  Users, 
-  FileText, 
-  TrendUp, 
-  Plus, 
-  MapPin, 
-  ArrowUpRight, 
-  UserCircle 
+  HouseIcon, 
+  // UsersIcon, 
+  FileTextIcon, 
+  ChartLineUpIcon, 
+  PlusIcon, 
+  MapPinIcon, 
+  ArrowUpRightIcon, 
+  // UserCircleIcon 
 } from "@phosphor-icons/react";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 
 export default function OwnerDashboard() {
   const { user } = useAppSelector((state) => state.auth);
-  const displayName = user?.name || "Owner";
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const displayName = mounted && user?.name ? user.name : "Owner";
 
   // Mock data for Owner Dashboard
   const metrics = [
     {
-      icon: <House size={22} weight="light" className="text-neutral-900" />,
+      icon: <HouseIcon size={22} weight="light" className="text-neutral-900" />,
       title: "Active Listings",
       value: "4",
       desc: "Properties live",
       href: "/listings",
     },
     {
-      icon: <FileText size={22} weight="light" className="text-neutral-900" />,
+      icon: <FileTextIcon size={22} weight="light" className="text-neutral-900" />,
       title: "Applications",
       value: "9",
       desc: "Pending review",
       href: "#",
     },
     {
-      icon: <TrendUp size={22} weight="light" className="text-neutral-900" />,
+      icon: <ChartLineUpIcon size={22} weight="light" className="text-neutral-900" />,
       title: "Monthly Revenue",
       value: "$6,400",
       desc: "+12% from last month",
@@ -106,7 +114,7 @@ export default function OwnerDashboard() {
             whileTap={{ scale: 0.98 }}
             className="flex items-center gap-2 bg-neutral-900 text-white px-5 py-3 rounded-xl text-sm font-medium hover:bg-neutral-800 transition-colors shadow-sm"
           >
-            <Plus size={16} />
+            <PlusIcon size={16} />
             List New Property
           </motion.button>
         </Link>
@@ -146,7 +154,7 @@ export default function OwnerDashboard() {
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-medium tracking-tight">Your listed properties</h2>
             <Link href="/listings" className="text-xs font-medium text-neutral-500 hover:text-neutral-900 transition-colors flex items-center gap-1">
-              Manage all <ArrowUpRight size={12} />
+              Manage all <ArrowUpRightIcon size={12} />
             </Link>
           </div>
 
@@ -168,7 +176,7 @@ export default function OwnerDashboard() {
                 <div className="p-5">
                   <h3 className="font-medium text-neutral-950 truncate group-hover:text-indigo-600 transition-colors">{prop.title}</h3>
                   <div className="flex items-center gap-1 text-neutral-400 mt-2 mb-3">
-                    <MapPin size={14} />
+                    <MapPinIcon size={14} />
                     <span className="text-xs font-light truncate">{prop.location}</span>
                   </div>
                   <div className="flex items-center justify-between border-t border-neutral-100 pt-3">
