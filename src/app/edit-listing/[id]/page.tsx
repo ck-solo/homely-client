@@ -1,17 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { ListingForm as ListingFormType, ListingImage } from "@/types/Ilisting.type";
 import ListingCard from "@/features/listing/components/ListingCard";
 import ListingForm from "@/features/listing/components/ListingForm";
 import { useListing } from "@/features/listing/hooks/useListing";
-import { createListingAction } from "@/features/listing/slice/listing.slice";
+import { updateListingAction } from "@/features/listing/slice/listing.slice";
 
-export default function CreateListingPage() {
+export default function EditListingPage() {
   const router = useRouter();
-  const { createListing, isLoading } = useListing();
+  const params = useParams();
+  const id = params.id as string;
+  const { updateListing, getListingById, currentListing, isLoading } = useListing();
+  const [isFetching, setIsFetching] = useState(true);
+
   const [form, setForm] = useState<ListingFormType>({
     title: "",
     description: "",
@@ -22,6 +26,34 @@ export default function CreateListingPage() {
     amenities: [],
     imagesList: [],
   });
+
+  // Fetch listing data on mount
+  useEffect(() => {
+    if (id) {
+      setIsFetching(true);
+      getListingById(id).then((action) => {
+        setIsFetching(false);
+        if (action.payload && typeof action.payload === 'object' && 'data' in action.payload) {
+          const listing = action.payload.data;
+          setForm({
+            title: listing.title,
+            description: listing.description || "",
+            city: listing.city,
+            rentBudget: listing.rentBudget.toString(),
+            propertyType: listing.propertyType,
+            genderPreference: listing.genderPreference || "Co-ed",
+            amenities: listing.amenities || [],
+            imagesList: (listing.images || []).map((imgUrl: string) => ({
+              previewUrl: imgUrl,
+            })),
+          });
+        } else {
+          toast.error("Failed to load listing details");
+          router.push("/listings");
+        }
+      });
+    }
+  }, [id, getListingById, router]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -64,7 +96,8 @@ export default function CreateListingPage() {
 
   const removeImage = (indexToRemove: number) => {
     const img = form.imagesList[indexToRemove];
-    if (img && img.previewUrl) {
+    if (img && img.previewUrl && img.file) {
+      // Only revoke object URLs created in the browser (newly selected files)
       URL.revokeObjectURL(img.previewUrl);
     }
     setForm((prev) => ({
@@ -84,13 +117,23 @@ export default function CreateListingPage() {
     formData.append("title", form.title);
     formData.append("description", form.description);
     formData.append("city", form.city);
-    formData.append("rentBudget", form.rentBudget);
+    formData.append("rentBudget", form.rentBudget.toString());
     formData.append("propertyType", form.propertyType);
     formData.append("genderPreference", form.genderPreference);
-    // Mock coordinates as Delhi standard default coordinates
-    formData.append("location", JSON.stringify({ type: "Point", coordinates: [77.209, 28.613] }));
+    
+    // We stringify the amenities so the backend can parse them
     formData.append("amenities", JSON.stringify(form.amenities));
+    
+    // Pass existing image URLs so the backend knows which ones to keep
+    const existingImages = form.imagesList
+      .filter((img) => !img.file)
+      .map((img) => img.previewUrl);
+      
+    // Send them as JSON or as repeated fields, here we send as JSON string 
+    // depending on how backend parses, but standard is JSON array for existing ones
+    formData.append("images", JSON.stringify(existingImages));
 
+    // Append newly added files
     form.imagesList.forEach((img) => {
       if (img.file) {
         formData.append("images", img.file);
@@ -98,18 +141,26 @@ export default function CreateListingPage() {
     });
 
     try {
-      const resultAction = await createListing(formData);
-      if (createListingAction.fulfilled.match(resultAction)) {
-        toast.success("Listing created successfully!");
+      const resultAction = await updateListing(id, formData);
+      if (updateListingAction.fulfilled.match(resultAction)) {
+        toast.success("Listing updated successfully!");
         router.push("/listings");
       } else {
-        const message = resultAction.payload as string || "Failed to list property";
+        const message = resultAction.payload as string || "Failed to update property";
         toast.error(message);
       }
     } catch (err) {
       toast.error("An unexpected error occurred");
     }
   };
+
+  if (isFetching) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white text-neutral-500">
+        Loading listing data...
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-white text-neutral-900">
@@ -118,8 +169,8 @@ export default function CreateListingPage() {
         <div className="flex flex-col items-start gap-4">
           {/* Live Preview Title Tag */}
           <div className="top-6 left-6 flex items-center gap-2 px-3 py-1.5 rounded-full bg-white shadow-sm text-xs font-medium text-black tracking-wider uppercase">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            Real-Time Preview
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+            Edit Mode Preview
           </div>
 
           <ListingCard
@@ -141,11 +192,11 @@ export default function CreateListingPage() {
           {/* Header */}
           <div className="mb-10">
             <h1 className="text-2xl md:text-3xl font-medium tracking-tight text-neutral-900">
-              List Your Property
+              Edit Your Property
             </h1>
             <p className="text-sm text-neutral-500 font-light mt-1.5 leading-relaxed">
-              Provide the required specifications below to catalog your space in
-              the Homely listings registry.
+              Update the specifications below to reflect the latest details of your
+              listed space.
             </p>
           </div>
 
@@ -159,6 +210,7 @@ export default function CreateListingPage() {
             onRemoveImage={removeImage}
             onSubmit={handleSubmit}
             isLoading={isLoading}
+            isEdit={true}
           />
         </div>
       </div>
