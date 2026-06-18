@@ -13,19 +13,21 @@ import {
   ArrowUpRight 
 } from "@phosphor-icons/react";
 import Link from "next/link";
+import { useFavorites } from "@/features/favorites/hooks/useFavorites";
 
 export default function TenantDashboard() {
   const { user } = useAppSelector((state) => state.auth);
   const displayName = user?.name || "Tenant";
+  const { favorites } = useFavorites();
 
-  // Mock data for Tenant Dashboard
+  // Dashboard metrics
   const metrics = [
     {
       icon: <Heart size={22} weight="light" className="text-neutral-900" />,
       title: "Saved Spaces",
-      value: "6",
+      value: String(favorites.length),
       desc: "Properties you liked",
-      href: "/listings?filter=saved",
+      href: "/dashboard/tenant/favorites",
     },
     {
       icon: <Users size={22} weight="light" className="text-neutral-900" />,

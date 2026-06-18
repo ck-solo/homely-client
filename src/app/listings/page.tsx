@@ -17,6 +17,7 @@ import ListingCard, {
   ListingCardSkeleton,
   type Listing,
 } from "@/components/listings/ListingCard";
+import { useFavorites, useToggleFavorite } from "@/features/favorites/hooks/useFavorites";
 
 // ─── API Fetcher ────────────────────────────────────────
 interface ListingsResponse {
@@ -41,6 +42,12 @@ const fetchListings = async (params: Record<string, string>): Promise<ListingsRe
 function ListingsPageInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { isFavorited } = useFavorites();
+  const toggleMutation = useToggleFavorite();
+
+  const handleToggleFavorite = useCallback((listingId: string) => {
+    toggleMutation.mutate(listingId);
+  }, [toggleMutation]);
 
   // ─── State from URL params ────────────────────────────
   const [searchTerm, setSearchTerm] = useState(searchParams.get("search") || "");
@@ -240,7 +247,14 @@ function ListingsPageInner() {
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
               {listings.map((listing: Listing, idx: number) => (
-                <ListingCard key={listing._id} listing={listing} index={idx} />
+                <ListingCard
+                  key={listing._id}
+                  listing={listing}
+                  index={idx}
+                  isFavorited={isFavorited(listing._id)}
+                  onToggleFavorite={handleToggleFavorite}
+                  isToggling={toggleMutation.isPending}
+                />
               ))}
             </div>
 
