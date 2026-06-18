@@ -3,15 +3,15 @@
 import React from "react";
 import { motion } from "framer-motion";
 import {
-  House,
-  MapPin,
-  CurrencyInr,
-  Plus,
-  Trash,
-  Check,
-  Image as ImageIcon,
-  FileText,
-  UploadSimple,
+  HouseIcon,
+  MapPinIcon,
+  CurrencyInrIcon,
+  PlusIcon,
+  TrashIcon,
+  CheckIcon,
+  ImageIcon,
+  FileTextIcon,
+  UploadSimpleIcon,
 } from "@phosphor-icons/react";
 
 const PRESET_AMENITIES = [
@@ -60,7 +60,7 @@ export default function ListingForm({
       <div className="bg-white rounded-2xl p-6 border border-neutral-200/60 shadow-xs space-y-6">
         <div className="flex items-center gap-2 pb-3 border-b border-neutral-100">
           <div className="p-1.5 bg-neutral-50 rounded-lg text-neutral-700">
-            <House size={18} weight="light" />
+            <HouseIcon size={18} weight="light" />
           </div>
           <h2 className="text-sm font-medium text-neutral-950 uppercase tracking-wider">
             Property Details
@@ -105,7 +105,7 @@ export default function ListingForm({
             </label>
             <div className="relative">
               <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400 text-sm">
-                <CurrencyInr size={16} />
+                <CurrencyInrIcon size={16} />
               </span>
               <input
                 type="number"
@@ -131,7 +131,7 @@ export default function ListingForm({
             </label>
             <div className="relative">
               <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400 text-sm">
-                <MapPin size={16} />
+                <MapPinIcon size={16} />
               </span>
               <input
                 type="text"
@@ -178,7 +178,7 @@ export default function ListingForm({
       <div className="bg-white rounded-2xl p-6 border border-neutral-200/60 shadow-xs space-y-6">
         <div className="flex items-center gap-2 pb-3 border-b border-neutral-100">
           <div className="p-1.5 bg-neutral-50 rounded-lg text-neutral-700">
-            <FileText size={18} weight="light" />
+            <FileTextIcon size={18} weight="light" />
           </div>
           <h2 className="text-sm font-medium text-neutral-950 uppercase tracking-wider">
             Preferences & Description
@@ -230,7 +230,7 @@ export default function ListingForm({
                       : "bg-neutral-50 border-neutral-200 text-neutral-600 hover:bg-neutral-100 hover:border-neutral-300"
                   }`}
                 >
-                  {isSelected && <Check size={14} weight="bold" />}
+                  {isSelected && <CheckIcon size={14} weight="bold" />}
                   {gender}
                 </button>
               );
@@ -243,7 +243,7 @@ export default function ListingForm({
       <div className="bg-white rounded-2xl p-6 border border-neutral-200/60 shadow-xs space-y-6">
         <div className="flex items-center gap-2 pb-3 border-b border-neutral-100">
           <div className="p-1.5 bg-neutral-50 rounded-lg text-neutral-700">
-            <Plus size={18} weight="light" />
+            <PlusIcon size={18} weight="light" />
           </div>
           <h2 className="text-sm font-medium text-neutral-950 uppercase tracking-wider">
             Features & Amenities
@@ -270,9 +270,9 @@ export default function ListingForm({
                   }`}
                 >
                   {isSelected ? (
-                    <Check size={12} weight="bold" />
+                    <CheckIcon size={12} weight="bold" />
                   ) : (
-                    <Plus size={12} />
+                    <PlusIcon size={12} />
                   )}
                   {amenity}
                 </button>
@@ -312,7 +312,7 @@ export default function ListingForm({
               className="hidden"
             />
             <div className="p-3 bg-neutral-50 group-hover:bg-indigo-50 rounded-xl transition-colors text-neutral-600 group-hover:text-indigo-600 mb-3">
-              <UploadSimple size={24} />
+              <UploadSimpleIcon size={24} />
             </div>
             <span className="text-sm font-medium text-neutral-950 group-hover:text-indigo-600 transition-colors">
               Click to upload images
@@ -345,7 +345,7 @@ export default function ListingForm({
                     onClick={() => onRemoveImage(idx)}
                     className="absolute top-1.5 right-1.5 bg-neutral-900/90 text-white hover:bg-red-600 rounded-lg p-1.5 opacity-0 group-hover:opacity-100 transition-opacity border border-white/10 shadow-xs cursor-pointer flex items-center justify-center"
                   >
-                    <Trash size={12} />
+                    <TrashIcon size={12} />
                   </button>
                 </div>
               ))}

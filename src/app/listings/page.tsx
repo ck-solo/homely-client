@@ -16,7 +16,7 @@ import FilterPanel, {
 import ListingCard, {
   ListingCardSkeleton,
   type Listing,
-} from "@/components/listings/ListingCard";
+} from "@/features/listing/components/ListingCard";
 import MasonryGrid from "@/components/listings/MasonryGrid";
 
 // ─── API Fetcher ────────────────────────────────────────
@@ -329,7 +329,7 @@ export default function ListingsPage() {
             <div className="h-12 w-full max-w-2xl bg-neutral-100 rounded-2xl animate-pulse mb-10" />
             <div className="w-full">
               {/* Fallback uses CSS columns since MasonryGrid needs JS to measure window width */}
-              <div className="columns-1 md:columns-2 lg:columns-3 gap-6 [column-fill:_balance] w-full">
+              <div className="columns-1 md:columns-2 lg:columns-3 gap-6 [column-fill:balance] w-full">
                 {Array.from(Array(8).keys()).map((i) => (
                   <div key={i} className="break-inside-avoid mb-6 w-full inline-block">
                     <ListingCardSkeleton index={i} />

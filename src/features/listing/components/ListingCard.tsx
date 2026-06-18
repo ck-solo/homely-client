@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPin, Heart, PencilSimple } from "@phosphor-icons/react";
+import { MapPinIcon, HeartIcon, PencilSimpleIcon } from "@phosphor-icons/react";
 import { useAppSelector } from "@/redux/store";
 import { useRouter } from "next/navigation";
 
@@ -57,7 +57,7 @@ export default function ListingCard({
   const rentBudget = listing?.rentBudget ?? propRentBudget;
   const description = listing?.description ?? propDescription ?? (listing ? "" : "Far from the city's noise, the green mountains stretch endlessly into the horizon, blanketed with mist and silence.");
   const amenities = listing?.amenities ?? propAmenities ?? [];
-  const images = listing?.images ?? propImages ?? [];
+  const images = listing?.images ?? propImages;
   const city = listing?.city ?? propCity ?? "Blue Ridge";
 
   const displayImageUrl = React.useMemo(() => {
@@ -126,7 +126,7 @@ export default function ListingCard({
       </h3>
 
       {/* Description */}
-      <p className="text-lg text-neutral-500 font-light leading-5 mt-2.5 mb-4 line-clamp-3 min-h-[72px] text-black break-words">
+      <p className="text-lg text-neutral-500 font-light leading-5 mt-2.5 mb-4 line-clamp-3 min-h-[72px] wrap-break-word">
         {description ||
           "Far from the city's noise, the green mountains stretch endlessly into the horizon, blanketed with mist and silence."}
       </p>
@@ -193,7 +193,7 @@ export default function ListingCard({
               aria-label="Edit listing"
               title="Edit Listing"
             >
-              <PencilSimple size={18} weight="regular" />
+              <PencilSimpleIcon size={18} weight="regular" />
             </button>
           )}
 
@@ -204,17 +204,17 @@ export default function ListingCard({
               aria-label="Add to favorites"
               id={`favorite-btn-${listing._id}`}
             >
-              <Heart size={18} weight="regular" />
+              <HeartIcon size={18} weight="regular" />
             </button>
           )}
         </div>
 
         {/* Map/Location Overlay on Image (Bottom-Left) */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/50 via-black/10 to-transparent" />
         
         <div className="absolute bottom-5 left-5 text-white z-10 flex flex-col gap-0.5">
           <div className="flex items-center gap-1">
-            <MapPin size={16} weight="bold" className="text-white shrink-0" />
+            <MapPinIcon size={16} weight="bold" className="text-white shrink-0" />
             <span className="text-lg font-medium tracking-tight leading-none drop-shadow-sm">
               {city || "Blue Ridge"}
             </span>
@@ -224,6 +224,52 @@ export default function ListingCard({
           </span>
         </div>
       </div>
+    </motion.div>
+  );
+}
+
+// ─── Skeleton Loader ────────────────────────────────────
+export function ListingCardSkeleton({ index = 0 }: { index?: number }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: index * 0.05 }}
+      className="w-full bg-white rounded-[32px] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-neutral-100/60 flex flex-col pointer-events-none"
+    >
+      {/* Card Header Tag Row */}
+      <div className="flex justify-between items-center w-full">
+        {/* Category & Preference tag skeleton */}
+        <div className="h-7 w-28 bg-neutral-100 rounded-full animate-pulse" />
+
+        {/* Combined Rent Price Pill skeleton */}
+        <div className="flex items-center rounded-full overflow-hidden">
+          <div className="h-7 w-12 bg-neutral-200 animate-pulse border-r border-white" />
+          <div className="h-7 w-16 bg-neutral-100 animate-pulse" />
+        </div>
+      </div>
+
+      {/* Title skeleton */}
+      <div className="h-[38px] mt-5 flex items-center">
+        <div className="h-7 w-3/4 bg-neutral-200 rounded-lg animate-pulse" />
+      </div>
+
+      {/* Description skeleton */}
+      <div className="mt-2.5 mb-4 space-y-2 min-h-[72px]">
+        <div className="h-4 w-full bg-neutral-100 rounded animate-pulse" />
+        <div className="h-4 w-5/6 bg-neutral-100 rounded animate-pulse" />
+        <div className="h-4 w-2/3 bg-neutral-100 rounded animate-pulse" />
+      </div>
+
+      {/* Amenities Tag Row skeleton */}
+      <div className="flex flex-wrap gap-1.5 mb-6 min-h-[26px]">
+        <div className="h-[22px] w-20 bg-neutral-100 rounded-full animate-pulse" />
+        <div className="h-[22px] w-24 bg-neutral-100 rounded-full animate-pulse" />
+        <div className="h-[22px] w-16 bg-neutral-100 rounded-full animate-pulse" />
+      </div>
+
+      {/* Card Hero Image skeleton */}
+      <div className="relative h-60 bg-neutral-100 rounded-[24px] overflow-hidden animate-pulse" />
     </motion.div>
   );
 }
