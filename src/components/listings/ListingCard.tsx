@@ -23,7 +23,9 @@ interface ListingCardProps {
 }
 
 // ─── Component ──────────────────────────────────────────
-export default function ListingCard({ listing, index = 0 }: ListingCardProps) {
+import React from 'react';
+
+const ListingCard = React.memo(function ListingCard({ listing, index = 0 }: ListingCardProps) {
   const {
     _id,
     title,
@@ -135,7 +137,9 @@ export default function ListingCard({ listing, index = 0 }: ListingCardProps) {
       </div>
     </motion.article>
   );
-}
+});
+
+export default ListingCard;
 
 // ─── Skeleton Loader ────────────────────────────────────
 export function ListingCardSkeleton({ index = 0 }: { index?: number }) {

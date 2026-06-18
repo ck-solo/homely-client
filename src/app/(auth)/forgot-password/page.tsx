@@ -20,8 +20,9 @@ export default function ForgotPasswordPage() {
       toast.success(response.message || "Reset link sent successfully");
       setSubmitted(true);
     },
-    onError: (err: any) => {
-      const errMsg = err.response?.data?.message || "Something went wrong. Please try again.";
+    onError: (err: unknown) => {
+      const apiError = err as import("@/types").ApiErrorResponse;
+      const errMsg = apiError.response?.data?.message || "Something went wrong. Please try again.";
       toast.error(errMsg);
     },
   });
@@ -149,6 +150,7 @@ export default function ForgotPasswordPage() {
               src="/Homely2.jpg"
               alt="Interior space"
               fill
+              sizes="50vw"
               className="object-cover"
               priority
             />

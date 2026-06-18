@@ -3,6 +3,7 @@
 import { useCallback } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { registerUser, clearError } from "../slice";
+import { RegisterRequest } from "@/types";
 
 /**
  * Custom hook that integrates the registration API call (via Redux async thunk)
@@ -21,7 +22,7 @@ export function useRegister() {
    * @param userData - Object containing name, email, password, role, phone, etc.
    */
   const register = useCallback(
-    async (userData: any) => {
+    async (userData: RegisterRequest) => {
       const resultAction = await dispatch(registerUser(userData));
       return resultAction;
     },

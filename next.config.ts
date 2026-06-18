@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "ik.imagekit.io",
       },
+      {
+        protocol: "https",
+        hostname: "lovable-code-bucket.s3.ap-south-1.amazonaws.com",
+      },
     ],
   },
 };

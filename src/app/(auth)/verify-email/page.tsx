@@ -4,6 +4,7 @@ import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useVerifyEmail } from "@/features/auth/hooks/useVerifyEmail";
 import { verifyEmail } from "@/features/auth/slice";
+import { useAppSelector } from "@/redux/store";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
@@ -12,6 +13,7 @@ function VerifyEmailContent() {
   const token = searchParams.get("token");
   const router = useRouter();
   const { verify } = useVerifyEmail();
+  const { user, isAuthenticated } = useAppSelector((state) => state.auth);
 
   const [status, setStatus] = useState<"loading" | "success" | "error">(
     !token ? "error" : "loading"
@@ -30,7 +32,11 @@ function VerifyEmailContent() {
       if (verifyEmail.fulfilled.match(resultAction)) {
         setStatus("success");
         setTimeout(() => {
-          router.push("/login");
+          if (isAuthenticated && user) {
+            router.push(user.role === "OWNER" ? "/dashboard/owner" : "/dashboard/tenant");
+          } else {
+            router.push("/login");
+          }
         }, 3000);
       } else {
         setStatus("error");
@@ -64,12 +70,12 @@ function VerifyEmailContent() {
               </svg>
             </div>
             <h1 className="text-2xl font-medium mb-2">Email Verified!</h1>
-            <p className="text-neutral-500 mb-8">Your account has been successfully verified. Redirecting to login...</p>
+            <p className="text-neutral-500 mb-8">Your account has been successfully verified. Redirecting to dashboard...</p>
             <Link 
-              href="/login"
+              href={isAuthenticated && user ? (user.role === "OWNER" ? "/dashboard/owner" : "/dashboard/tenant") : "/login"}
               className="inline-block bg-neutral-900 text-white px-6 py-3 rounded-xl text-sm font-medium hover:bg-neutral-800 transition-colors"
             >
-              Go to Login
+              Go to Dashboard
             </Link>
           </>
         )}

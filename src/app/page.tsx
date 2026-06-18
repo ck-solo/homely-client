@@ -59,7 +59,7 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.1 }}
             className="relative w-full h-full rounded-2xl overflow-hidden group"
           >
-            <Image src="/Homely1.jpg" alt="Living space" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
+            <Image src="/Homely1.jpg" alt="Living space" fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />
             <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
           </motion.div>
           
@@ -70,7 +70,7 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="relative w-full h-full rounded-2xl overflow-hidden group hidden md:block md:-translate-y-12"
           >
-            <Image src="/Homely2.jpg" alt="Work space" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
+            <Image src="/Homely2.jpg" alt="Work space" fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />
             <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
           </motion.div>
 
@@ -81,7 +81,7 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="relative w-full h-full rounded-2xl overflow-hidden group hidden md:block"
           >
-            <Image src="/Homely3.jpg" alt="Dining space" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
+            <Image src="/Homely3.jpg" alt="Dining space" fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />
             <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
           </motion.div>
         </div>

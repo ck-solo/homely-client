@@ -7,8 +7,6 @@ import {
   House, 
   Users, 
   MagnifyingGlass, 
-  Chat, 
-  UserCircle, 
   MapPin, 
   ArrowUpRight 
 } from "@phosphor-icons/react";
@@ -78,7 +76,7 @@ export default function TenantDashboard() {
             Welcome back, <span className="text-neutral-500">{displayName}</span>
           </h1>
           <p className="text-neutral-500 font-light mt-1">
-            Here's what is happening with your rental search today.
+            Here&apos;s what is happening with your rental search today.
           </p>
         </div>
         <Link href="/listings">

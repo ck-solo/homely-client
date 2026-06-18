@@ -187,6 +187,7 @@ export default function LoginPage() {
               src="/Homely1.jpg"
               alt="Interior space"
               fill
+              sizes="50vw"
               className="object-cover"
               priority
             />

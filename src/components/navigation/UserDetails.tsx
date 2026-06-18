@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
-import { User } from "@/features/auth/slice";
+import { User } from "@/types";
 import { DotsThreeVertical } from "@phosphor-icons/react";
 import Image from "next/image";
 import ProfileDropdown from "./ProfileDropdown";
@@ -18,7 +18,7 @@ export default function UserDetails({ user }: UserDetailsProps) {
   const initials = user.name
     ? user.name
         .split(" ")
-        .map((n) => n[0])
+        .map((n: string) => n[0])
         .join("")
         .slice(0, 2)
         .toUpperCase()

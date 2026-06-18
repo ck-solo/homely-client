@@ -11,7 +11,6 @@ import { resetPassword } from "@/api/password/resetPassword";
 import toast from "react-hot-toast";
 
 function ResetPasswordPageInner() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token") || "";
 
@@ -27,8 +26,9 @@ function ResetPasswordPageInner() {
       toast.success(response.message || "Password reset successfully!");
       setSubmitted(true);
     },
-    onError: (err: any) => {
-      const errMsg = err.response?.data?.message || "Reset failed. The token may be invalid or expired.";
+    onError: (err: unknown) => {
+      const apiError = err as import("@/types").ApiErrorResponse;
+      const errMsg = apiError.response?.data?.message || "Something went wrong. Please try again.";
       toast.error(errMsg);
     },
   });
@@ -78,7 +78,7 @@ function ResetPasswordPageInner() {
     });
   };
 
-  const errorMessage = apiError ? (apiError as any).response?.data?.message || "Invalid or expired token" : null;
+  const errorMessage = apiError ? (apiError as import("@/types").ApiErrorResponse).response?.data?.message || "Invalid or expired token" : null;
 
   return (
     <div className="flex flex-col lg:flex-row w-full min-h-screen bg-white text-neutral-900 pt-18 md:pt-22">
@@ -233,6 +233,7 @@ function ResetPasswordPageInner() {
               src="/Homely3.jpg"
               alt="Interior space"
               fill
+              sizes="50vw"
               className="object-cover"
               priority
             />

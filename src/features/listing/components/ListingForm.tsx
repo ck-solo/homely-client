@@ -27,6 +27,19 @@ const PRESET_AMENITIES = [
   "24/7 Security",
 ];
 
+import { ListingForm as IListingForm } from "@/types/Ilisting.type";
+
+interface ListingFormProps {
+  form: IListingForm;
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onPropertyTypeSelect: (type: IListingForm["propertyType"]) => void;
+  onGenderSelect: (gender: IListingForm["genderPreference"]) => void;
+  onToggleAmenity: (amenity: string) => void;
+  onImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onRemoveImage: (index: number) => void;
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+}
+
 export default function ListingForm({
   form,
   onChange,
@@ -36,7 +49,7 @@ export default function ListingForm({
   onImageChange,
   onRemoveImage,
   onSubmit,
-}) {
+}: ListingFormProps) {
   return (
     <form onSubmit={onSubmit} className="space-y-8">
       {/* SECTION 1: CORE SPECIFICATIONS */}
@@ -142,7 +155,7 @@ export default function ListingForm({
                 <button
                   key={type}
                   type="button"
-                  onClick={() => onPropertyTypeSelect(type)}
+                  onClick={() => onPropertyTypeSelect(type as IListingForm["propertyType"])}
                   className={`px-4 py-2.5 rounded-xl text-xs font-medium border transition-all cursor-pointer ${
                     isSelected
                       ? "bg-neutral-900 border-neutral-900 text-white shadow-xs"
@@ -206,7 +219,7 @@ export default function ListingForm({
                 <button
                   key={gender}
                   type="button"
-                  onClick={() => onGenderSelect(gender)}
+                  onClick={() => onGenderSelect(gender as IListingForm["genderPreference"])}
                   className={`py-3 px-4 rounded-xl border text-xs font-medium transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                     isSelected
                       ? "bg-neutral-900 border-neutral-900 text-white shadow-xs"

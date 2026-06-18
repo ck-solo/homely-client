@@ -4,21 +4,9 @@ import { registerApi } from '@/api/auth/register';
 import { verifyEmailApi } from '@/api/auth/verifyEmail';
 import { logoutApi } from '@/api/auth/logout';
 import { getMeApi } from '@/api/auth/getMe';
+import { User, AuthResponse, ApiErrorResponse, RegisterRequest, LoginRequest } from '@/types';
 
 // Types
-export interface User {
-  _id: string;
-  name: string;
-  email: string;
-  role: 'TENANT' | 'OWNER' | 'ADMIN';
-  phone?: string;
-  profilePicture?: string;
-  isEmailVerified: boolean;
-  accountStatus: 'ACTIVE' | 'BLOCKED';
-  createdAt: string;
-  updatedAt: string;
-}
-
 interface AuthState {
   user: User | null;
   accessToken: string | null;
@@ -37,67 +25,70 @@ const initialState: AuthState = {
 };
 
 // Async Thunks
-export const registerUser = createAsyncThunk(
+export const registerUser = createAsyncThunk<AuthResponse, RegisterRequest, { rejectValue: string }>(
   'auth/register',
-  async (userData: any, { rejectWithValue }) => {
+  async (userData, { rejectWithValue }) => {
     try {
       const data = await registerApi(userData);
       return data;
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const apiError = error as ApiErrorResponse;
       return rejectWithValue(
-        error.response?.data?.message || 'Failed to register. Please try again.'
+        apiError.response?.data?.message || 'Failed to register. Please try again.'
       );
     }
   }
 );
 
-export const loginUser = createAsyncThunk(
+export const loginUser = createAsyncThunk<AuthResponse, LoginRequest, { rejectValue: string }>(
   'auth/login',
-  async (credentials: any, { rejectWithValue }) => {
+  async (credentials, { rejectWithValue }) => {
     try {
       const data = await loginApi(credentials);
       return data;
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const apiError = error as ApiErrorResponse;
       return rejectWithValue(
-        error.response?.data?.message || 'Invalid email or password.'
+        apiError.response?.data?.message || 'Invalid email or password.'
       );
     }
   }
 );
 
-export const verifyEmail = createAsyncThunk(
+export const verifyEmail = createAsyncThunk<AuthResponse, string, { rejectValue: string }>(
   'auth/verifyEmail',
   async (token: string, { rejectWithValue }) => {
     try {
       const data = await verifyEmailApi(token);
       return data;
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const apiError = error as ApiErrorResponse;
       return rejectWithValue(
-        error.response?.data?.message || 'Verification failed.'
+        apiError.response?.data?.message || 'Verification failed.'
       );
     }
   }
 );
 
-export const logoutUser = createAsyncThunk(
+export const logoutUser = createAsyncThunk<boolean, void, { rejectValue: string }>(
   'auth/logout',
   async (_, { rejectWithValue }) => {
     try {
       await logoutApi();
       return true;
-    } catch (error: any) {
+    } catch (_error: unknown) {
       return rejectWithValue('Logout failed.');
     }
   }
 );
 
-export const getMe = createAsyncThunk(
+export const getMe = createAsyncThunk<AuthResponse, void, { rejectValue: string }>(
   'auth/getMe',
   async (_, { rejectWithValue }) => {
     try {
       const data = await getMeApi();
       return data;
-    } catch (error: any) {
+    } catch (_error: unknown) {
       return rejectWithValue('Failed to load user profile.');
     }
   }
@@ -125,7 +116,7 @@ const authSlice = createSlice({
       state.isLoading = true;
       state.error = null;
     });
-    builder.addCase(registerUser.fulfilled, (state, action: PayloadAction<any>) => {
+    builder.addCase(registerUser.fulfilled, (state, action: PayloadAction<AuthResponse>) => {
       state.isLoading = false;
       state.isAuthenticated = true;
       state.user = action.payload.data.user;
@@ -134,9 +125,9 @@ const authSlice = createSlice({
       localStorage.setItem('accessToken', action.payload.data.accessToken);
       localStorage.setItem('user', JSON.stringify(action.payload.data.user));
     });
-    builder.addCase(registerUser.rejected, (state, action: PayloadAction<any>) => {
+    builder.addCase(registerUser.rejected, (state, action) => {
       state.isLoading = false;
-      state.error = action.payload;
+      state.error = action.payload || 'Unknown error';
     });
 
     // Login
@@ -144,7 +135,7 @@ const authSlice = createSlice({
       state.isLoading = true;
       state.error = null;
     });
-    builder.addCase(loginUser.fulfilled, (state, action: PayloadAction<any>) => {
+    builder.addCase(loginUser.fulfilled, (state, action: PayloadAction<AuthResponse>) => {
       state.isLoading = false;
       state.isAuthenticated = true;
       state.user = action.payload.data.user;
@@ -153,9 +144,9 @@ const authSlice = createSlice({
       localStorage.setItem('accessToken', action.payload.data.accessToken);
       localStorage.setItem('user', JSON.stringify(action.payload.data.user));
     });
-    builder.addCase(loginUser.rejected, (state, action: PayloadAction<any>) => {
+    builder.addCase(loginUser.rejected, (state, action) => {
       state.isLoading = false;
-      state.error = action.payload;
+      state.error = action.payload || 'Unknown error';
     });
 
     // Verify Email
@@ -163,16 +154,16 @@ const authSlice = createSlice({
       state.isLoading = true;
       state.error = null;
     });
-    builder.addCase(verifyEmail.fulfilled, (state, action: PayloadAction<any>) => {
+    builder.addCase(verifyEmail.fulfilled, (state, action: PayloadAction<AuthResponse>) => {
       state.isLoading = false;
       if (state.user && state.user._id === action.payload.data.user._id) {
          state.user.isEmailVerified = true;
          localStorage.setItem('user', JSON.stringify(state.user));
       }
     });
-    builder.addCase(verifyEmail.rejected, (state, action: PayloadAction<any>) => {
+    builder.addCase(verifyEmail.rejected, (state, action) => {
       state.isLoading = false;
-      state.error = action.payload;
+      state.error = action.payload || 'Unknown error';
     });
 
     // Logout
@@ -185,7 +176,7 @@ const authSlice = createSlice({
     });
 
     // Get Me
-    builder.addCase(getMe.fulfilled, (state, action: PayloadAction<any>) => {
+    builder.addCase(getMe.fulfilled, (state, action: PayloadAction<AuthResponse>) => {
       state.user = action.payload.data.user;
       localStorage.setItem('user', JSON.stringify(action.payload.data.user));
     });
@@ -201,3 +192,4 @@ const authSlice = createSlice({
 
 export const { clearError, logout } = authSlice.actions;
 export default authSlice.reducer;
+

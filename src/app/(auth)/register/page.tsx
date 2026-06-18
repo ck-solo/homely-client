@@ -246,15 +246,8 @@ export default function RegisterPage() {
                   Check your inbox!
                 </h1>
                 <p className="text-neutral-500 font-light mb-8">
-                  We&apos;ve sent a verification link to <span className="font-medium text-neutral-900">{formData.email}</span>. Please verify your email to continue setting up your profile.
+                  We&apos;ve sent a verification link to <span className="font-medium text-neutral-900">{formData.email}</span>. Please verify your email to continue setting up your profile. Redirecting you...
                 </p>
-                
-                <button 
-                  onClick={() => router.push(formData.role === 'OWNER' ? '/dashboard/owner' : '/dashboard/tenant')}
-                  className="w-full flex items-center justify-center gap-2 bg-neutral-900 text-white px-6 py-3.5 rounded-xl text-sm font-medium hover:bg-neutral-800 transition-colors"
-                >
-                  Go to Dashboard (Unverified)
-                </button>
               </motion.div>
             )}
           </AnimatePresence>
@@ -307,6 +300,7 @@ export default function RegisterPage() {
               src="/Homely3.jpg" 
               alt="Interior space" 
               fill 
+              sizes="50vw"
               className="object-cover"
               priority
             />
