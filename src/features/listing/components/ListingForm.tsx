@@ -38,6 +38,8 @@ interface ListingFormProps {
   onImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onRemoveImage: (index: number) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  isLoading?: boolean;
+  isEdit?: boolean;
 }
 
 export default function ListingForm({
@@ -49,6 +51,8 @@ export default function ListingForm({
   onImageChange,
   onRemoveImage,
   onSubmit,
+  isLoading = false,
+  isEdit = false,
 }: ListingFormProps) {
   return (
     <form onSubmit={onSubmit} className="space-y-8">
@@ -353,11 +357,14 @@ export default function ListingForm({
       {/* ACTION SUBMIT BUTTON */}
       <motion.button
         type="submit"
+        disabled={isLoading}
         whileHover={{ scale: 1.01 }}
         whileTap={{ scale: 0.99 }}
-        className="w-full py-4 bg-neutral-950 text-white hover:bg-neutral-900 rounded-2xl font-medium text-sm transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer"
+        className="w-full py-4 bg-neutral-950 text-white hover:bg-neutral-900 rounded-2xl font-medium text-sm transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        List Property
+        {isLoading
+          ? (isEdit ? "Updating Listing..." : "Listing Property...")
+          : (isEdit ? "Update listing" : "List Property")}
       </motion.button>
     </form>
   );

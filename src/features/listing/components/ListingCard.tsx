@@ -2,9 +2,27 @@
 
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPin } from "@phosphor-icons/react";
+import { MapPin, Heart, PencilSimple } from "@phosphor-icons/react";
+import { useAppSelector } from "@/redux/store";
+import { useRouter } from "next/navigation";
+
+export interface Listing {
+  _id: string;
+  title: string;
+  city: string;
+  rentBudget: number;
+  propertyType: string;
+  genderPreference: string;
+  images: string[];
+  amenities: string[];
+  availabilityStatus?: boolean;
+  description?: string;
+  ownerRef?: { _id: string } | string;
+}
 
 export interface ListingCardProps {
+  listing?: Listing;
+  index?: number;
   propertyType?: string;
   genderPreference?: string;
   rentBudget?: string | number;
@@ -17,23 +35,43 @@ export interface ListingCardProps {
 }
 
 export default function ListingCard({
-  propertyType = "Apartment",
-  genderPreference = "Co-ed",
-  rentBudget,
-  title = "Discovering peace",
-  description = "Far from the city's noise, the green mountains stretch endlessly into the horizon, blanketed with mist and silence.",
-  amenities = [],
-  images = [],
-  city = "Blue Ridge",
+  listing,
+  index = 0,
+  propertyType: propPropertyType,
+  genderPreference: propGenderPreference,
+  rentBudget: propRentBudget,
+  title: propTitle,
+  description: propDescription,
+  amenities: propAmenities,
+  images: propImages,
+  city: propCity,
   className = "",
 }: ListingCardProps) {
-  const lastImageUrl = React.useMemo(() => {
+  const user = useAppSelector((state) => state.auth.user);
+  const router = useRouter();
+
+  // Resolve properties dynamically from listing object or individual props
+  const title = listing?.title ?? propTitle ?? "Discovering peace";
+  const propertyType = listing?.propertyType ?? propPropertyType ?? "Apartment";
+  const genderPreference = listing?.genderPreference ?? propGenderPreference ?? "Co-ed";
+  const rentBudget = listing?.rentBudget ?? propRentBudget;
+  const description = listing?.description ?? propDescription ?? (listing ? "" : "Far from the city's noise, the green mountains stretch endlessly into the horizon, blanketed with mist and silence.");
+  const amenities = listing?.amenities ?? propAmenities ?? [];
+  const images = listing?.images ?? propImages ?? [];
+  const city = listing?.city ?? propCity ?? "Blue Ridge";
+
+  const displayImageUrl = React.useMemo(() => {
     if (!images || images.length === 0) return null;
-    const lastImg = images[images.length - 1];
-    if (typeof lastImg === "string") {
-      return lastImg;
+    
+    // For stored backend listings, show the first image (cover/thumbnail)
+    // For live preview (e.g. form creation list of preview urls), show the last uploaded image
+    const isBackend = typeof images[0] === "string";
+    const img = isBackend ? images[0] : images[images.length - 1];
+    
+    if (typeof img === "string") {
+      return img;
     }
-    return lastImg?.previewUrl || null;
+    return img?.previewUrl || null;
   }, [images]);
 
   // Handle Indian currency formatting for rent budget safely
@@ -41,22 +79,35 @@ export default function ListingCard({
     if (!rentBudget) return "₹0";
     const numericRent = Number(rentBudget);
     if (isNaN(numericRent)) return `₹${rentBudget}`;
-    return `₹${numericRent.toLocaleString()}`;
+    return `₹${numericRent.toLocaleString("en-IN")}`;
   }, [rentBudget]);
 
   return (
     <motion.div
       layout
-      className={`w-full sm:w-[400px] bg-white rounded-[32px] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-neutral-100/60 relative z-10 group ${className}`}
+      id={listing?._id ? `listing-card-${listing._id}` : undefined}
+      initial={listing ? { opacity: 0, y: 24 } : undefined}
+      animate={listing ? { opacity: 1, y: 0 } : undefined}
       whileHover={{ y: -4 }}
-      transition={{ duration: 0.3 }}
+      transition={
+        listing
+          ? {
+              duration: 0.5,
+              delay: index * 0.06,
+              ease: [0.16, 1, 0.3, 1],
+            }
+          : { duration: 0.3 }
+      }
+      className={`w-full h-fit ${listing ? "" : "sm:w-[400px]"} bg-white rounded-[32px] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-neutral-100/60 relative z-10 group ${className}`}
     >
       {/* Card Header Tag Row */}
-      <div className="flex justify-between items-center w-full">
-        {/* Category & Preference tag */}
-        <span className="bg-[#222222] text-[#F3F4F6] px-3.5 py-1.5 rounded-full text-xs font-normal tracking-wide shadow-sm">
-          {propertyType || "Apartment"} • {genderPreference}
-        </span>
+      <div className="flex flex-wrap justify-between items-center w-full gap-2">
+        <div className="flex items-center gap-2">
+          {/* Category & Preference tag */}
+          <span className="bg-[#222222] text-[#F3F4F6] px-3.5 py-1.5 rounded-full text-xs font-normal tracking-wide shadow-sm">
+            {propertyType || "Apartment"} • {genderPreference}
+          </span>
+        </div>
 
         {/* Combined Rent Price Pill */}
         <div className="flex items-center text-[10px] font-medium tracking-wider shadow-sm rounded-full overflow-hidden">
@@ -106,16 +157,16 @@ export default function ListingCard({
       {/* Card Hero Image (inset at bottom) */}
       <div className="relative h-60 bg-neutral-100 rounded-[24px] overflow-hidden shadow-inner">
         <AnimatePresence mode="wait">
-          {lastImageUrl ? (
+          {displayImageUrl ? (
             <motion.div
-              key={lastImageUrl}
+              key={displayImageUrl}
               initial={{ opacity: 0, scale: 1.05 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.4 }}
               className="absolute inset-0 bg-cover bg-center"
               style={{
-                backgroundImage: `url(${lastImageUrl})`,
+                backgroundImage: `url(${displayImageUrl})`,
               }}
             />
           ) : (
@@ -130,6 +181,33 @@ export default function ListingCard({
             />
           )}
         </AnimatePresence>
+
+        {/* Action buttons wrapper */}
+        <div className="absolute top-4 right-4 z-20 flex flex-col gap-2">
+          {/* Edit button (only visible if logged-in user is the owner) */}
+          {user && listing?.ownerRef && 
+            (typeof listing.ownerRef === "string" ? listing.ownerRef === user._id : listing.ownerRef._id === user._id) && (
+            <button
+              onClick={() => router.push(`/edit-listing/${listing._id}`)}
+              className="p-2.5 rounded-full bg-white/80 backdrop-blur-sm hover:bg-indigo-50 text-neutral-600 hover:text-indigo-600 transition-all duration-200 shadow-md border border-neutral-100/40"
+              aria-label="Edit listing"
+              title="Edit Listing"
+            >
+              <PencilSimple size={18} weight="regular" />
+            </button>
+          )}
+
+          {/* Favorite button (only visible on browse page when listing ID is present) */}
+          {listing?._id && (
+            <button
+              className="p-2.5 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white text-neutral-500 hover:text-red-500 transition-all duration-200 shadow-md border border-neutral-100/40"
+              aria-label="Add to favorites"
+              id={`favorite-btn-${listing._id}`}
+            >
+              <Heart size={18} weight="regular" />
+            </button>
+          )}
+        </div>
 
         {/* Map/Location Overlay on Image (Bottom-Left) */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />

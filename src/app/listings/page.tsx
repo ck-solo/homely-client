@@ -17,6 +17,7 @@ import ListingCard, {
   ListingCardSkeleton,
   type Listing,
 } from "@/components/listings/ListingCard";
+import MasonryGrid from "@/components/listings/MasonryGrid";
 
 // ─── API Fetcher ────────────────────────────────────────
 interface ListingsResponse {
@@ -190,10 +191,12 @@ function ListingsPageInner() {
 
         {/* ─── Listings Grid ──── */}
         {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-            {Array.from(Array(8).keys()).map((i) => (
-              <ListingCardSkeleton key={i} index={i} />
-            ))}
+          <div className="w-full">
+            <MasonryGrid
+              items={Array.from(Array(8).keys())}
+              keyExtractor={(item) => item.toString()}
+              renderItem={(item) => <ListingCardSkeleton index={item as number} />}
+            />
           </div>
         ) : isError ? (
           <motion.div
@@ -238,10 +241,14 @@ function ListingsPageInner() {
           </motion.div>
         ) : (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-              {listings.map((listing: Listing, idx: number) => (
-                <ListingCard key={listing._id} listing={listing} index={idx} />
-              ))}
+            <div className="w-full">
+              <MasonryGrid
+                items={listings}
+                keyExtractor={(listing) => listing._id}
+                renderItem={(listing, idx) => (
+                  <ListingCard listing={listing} index={idx} />
+                )}
+              />
             </div>
 
             {/* ─── Pagination ──── */}
@@ -320,10 +327,15 @@ export default function ListingsPage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="h-12 w-64 bg-neutral-100 rounded-xl animate-pulse mb-8" />
             <div className="h-12 w-full max-w-2xl bg-neutral-100 rounded-2xl animate-pulse mb-10" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-              {Array.from(Array(8).keys()).map((i) => (
-                <ListingCardSkeleton key={i} index={i} />
-              ))}
+            <div className="w-full">
+              {/* Fallback uses CSS columns since MasonryGrid needs JS to measure window width */}
+              <div className="columns-1 md:columns-2 lg:columns-3 gap-6 [column-fill:_balance] w-full">
+                {Array.from(Array(8).keys()).map((i) => (
+                  <div key={i} className="break-inside-avoid mb-6 w-full inline-block">
+                    <ListingCardSkeleton index={i} />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </section>
