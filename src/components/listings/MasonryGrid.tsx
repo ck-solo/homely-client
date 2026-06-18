@@ -49,11 +49,11 @@ export default function MasonryGrid<T>({ items, renderItem, keyExtractor }: Maso
     <div className="flex w-full items-start gap-6">
       {columns.map((columnItems, colIndex) => (
         <div key={colIndex} className="flex flex-col gap-6 flex-1 min-w-0">
-          {columnItems.map((item, indexInCol) => 
-            // We pass the global index (or just let the caller handle it if they need it, 
-            // but for animations, it's better if we give them a somewhat predictable index)
-            renderItem(item, colIndex + indexInCol * columnCount)
-          )}
+          {columnItems.map((item, indexInCol) => (
+            <React.Fragment key={keyExtractor(item)}>
+              {renderItem(item, colIndex + indexInCol * columnCount)}
+            </React.Fragment>
+          ))}
         </div>
       ))}
     </div>
