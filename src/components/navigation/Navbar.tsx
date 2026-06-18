@@ -40,12 +40,14 @@ export default function Navbar() {
       </nav>
 
       <div className="hidden md:flex items-center gap-4">
-        <Link 
-          href="/create-listing" 
-          className="text-sm text-neutral-600 hover:text-neutral-900 transition-colors"
-        >
-          List Property
-        </Link>
+        {(!mounted || !isAuthenticated || user?.role === "OWNER") && (
+          <Link 
+            href="/create-listing" 
+            className="text-sm text-neutral-600 hover:text-neutral-900 transition-colors"
+          >
+            List Property
+          </Link>
+        )}
 
         {mounted ? (
             isAuthenticated && user ? (
@@ -127,9 +129,11 @@ export default function Navbar() {
                 <MobileNavLink href="#vibe-match" onClick={() => setIsOpen(false)}>
                   Vibe Match
                 </MobileNavLink>
-                <MobileNavLink href="/list-property" onClick={() => setIsOpen(false)}>
-                  List Property
-                </MobileNavLink>
+                {(!mounted || !isAuthenticated || user?.role === "OWNER") && (
+                  <MobileNavLink href="/create-listing" onClick={() => setIsOpen(false)}>
+                    List Property
+                  </MobileNavLink>
+                )}
 
                 {mounted && isAuthenticated && user && (
                   <>

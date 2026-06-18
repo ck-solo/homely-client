@@ -3,6 +3,7 @@
 import { useCallback } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { loginUser, clearError } from "../slice";
+import { LoginRequest } from "@/types";
 
 /**
  * Custom hook that integrates the login API call (via Redux async thunk)
@@ -21,7 +22,7 @@ export function useLogin() {
    * @param credentials - Object containing email and password
    */
   const login = useCallback(
-    async (credentials: any) => {
+    async (credentials: LoginRequest) => {
       const resultAction = await dispatch(loginUser(credentials));
       return resultAction;
     },

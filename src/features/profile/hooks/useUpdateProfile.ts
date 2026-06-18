@@ -27,9 +27,10 @@ export function useUpdateProfile() {
 
       toast.success("Profile updated successfully!");
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
+      const apiError = error as import("@/types").ApiErrorResponse;
       const message =
-        error?.response?.data?.message || "Failed to update profile. Please try again.";
+        apiError?.response?.data?.message || "Failed to update profile. Please try again.";
       toast.error(message);
     },
   });

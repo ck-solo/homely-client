@@ -9,6 +9,7 @@ const publicRoutes = [
   "/login",
   "/register",
   "/verify-email",
+  "/verify-email-pending",
   "/forgot-password",
   "/reset-password",
 ];
@@ -37,14 +38,28 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
       return;
     }
 
+    // Authenticated user trying to access protected route but email is not verified
+    if (isAuthenticated && !isPublicRoute && user && !user.isEmailVerified) {
+      router.push("/verify-email-pending");
+      return;
+    }
+
     // Authenticated user trying to access login/register
     if (isAuthenticated && authOnlyRoutes.includes(pathname)) {
-      const dashboardUrl =
-        user?.role === "OWNER" ? "/dashboard/owner" : "/dashboard/tenant";
+      if (user && !user.isEmailVerified) {
+        router.push("/verify-email-pending");
+      } else {
+        const dashboardUrl =
+          user?.role === "OWNER" ? "/dashboard/owner" : "/dashboard/tenant";
 
-      router.push(dashboardUrl);
+        router.push(dashboardUrl);
+      }
     }
   }, [isAuthenticated, isLoading, pathname, router, user]);
+
+  if (isLoading) {
+    return null; // Prevents flash of unprotected content
+  }
 
   return <>{children}</>;
 }

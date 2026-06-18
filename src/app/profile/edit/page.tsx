@@ -146,8 +146,29 @@ export default function ProfileEditPage() {
     reset,
     formState: { errors, isDirty },
   } = useForm<FormData>({
-    resolver: zodResolver(schema),
-    defaultValues: {},
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    resolver: zodResolver(schema) as any,
+    defaultValues: {
+      name: "",
+      phone: "",
+      bio: "",
+      occupation: "",
+      city: "",
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      gender: "" as any,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      age: "" as any,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      budgetMin: "" as any,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      budgetMax: "" as any,
+      foodHabits: "ANY",
+      smokingPreference: false,
+      sleepingSchedule: "FLEXIBLE",
+      lifestyleDetails: "",
+      businessName: "",
+      businessDetails: "",
+    },
   });
 
   // Populate form when profile data loads
@@ -167,10 +188,14 @@ export default function ProfileEditPage() {
         bio: profile?.bio || "",
         occupation: profile?.occupation || "",
         city: profile?.city || "",
-        gender: profile?.gender || undefined,
-        age: profile?.age || undefined,
-        budgetMin: profile?.roommatePreferences?.budget?.min || 0,
-        budgetMax: profile?.roommatePreferences?.budget?.max || 0,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        gender: profile?.gender || ("" as any),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        age: profile?.age || ("" as any),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        budgetMin: profile?.roommatePreferences?.budget?.min ?? ("" as any),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        budgetMax: profile?.roommatePreferences?.budget?.max ?? ("" as any),
         foodHabits: profile?.roommatePreferences?.foodHabits || "ANY",
         smokingPreference:
           profile?.roommatePreferences?.smokingPreference || false,
@@ -242,7 +267,8 @@ export default function ProfileEditPage() {
   }, []);
 
   // Form submission
-  const onSubmit = (data: FormData) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onSubmit = (data: any) => {
     const formData = new window.FormData();
 
     // Core user fields
@@ -510,6 +536,7 @@ export default function ProfileEditPage() {
                         render={({ field }) => (
                           <select
                             {...field}
+                            value={field.value || ""}
                             className={selectClass(errors.gender)}
                           >
                             <option value="">Select gender</option>
@@ -531,6 +558,7 @@ export default function ProfileEditPage() {
                           <input
                             type="number"
                             {...field}
+                            value={field.value ?? ""}
                             onChange={(e) =>
                               field.onChange(
                                 e.target.value
@@ -565,9 +593,10 @@ export default function ProfileEditPage() {
                           <input
                             type="number"
                             {...field}
+                            value={field.value ?? ""}
                             onChange={(e) =>
                               field.onChange(
-                                e.target.value ? Number(e.target.value) : 0,
+                                e.target.value ? Number(e.target.value) : undefined,
                               )
                             }
                             placeholder="e.g. 5000"
@@ -588,9 +617,10 @@ export default function ProfileEditPage() {
                           <input
                             type="number"
                             {...field}
+                            value={field.value ?? ""}
                             onChange={(e) =>
                               field.onChange(
-                                e.target.value ? Number(e.target.value) : 0,
+                                e.target.value ? Number(e.target.value) : undefined,
                               )
                             }
                             placeholder="e.g. 15000"
@@ -612,6 +642,7 @@ export default function ProfileEditPage() {
                         render={({ field }) => (
                           <select
                             {...field}
+                            value={field.value || "ANY"}
                             className={selectClass(errors.foodHabits)}
                           >
                             {FOOD_OPTIONS.map((opt) => (
@@ -634,6 +665,7 @@ export default function ProfileEditPage() {
                         render={({ field }) => (
                           <select
                             {...field}
+                            value={field.value || "FLEXIBLE"}
                             className={selectClass(errors.sleepingSchedule)}
                           >
                             {SLEEP_OPTIONS.map((opt) => (
@@ -656,7 +688,7 @@ export default function ProfileEditPage() {
                           <div className="relative">
                             <input
                               type="checkbox"
-                              checked={field.value as boolean}
+                              checked={field.value ?? false}
                               onChange={(e) => field.onChange(e.target.checked)}
                               className="sr-only peer"
                             />
