@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Instrument_Serif } from "next/font/google";
 import Navbar from "@/components/navigation/Navbar";
 import Footer from "@/components/navigation/Footer";
 import "./globals.css";
@@ -16,13 +17,20 @@ export const viewport: Viewport = {
   themeColor: "#FAFAFA", // Light mode compatibility
 };
 
+const instrument = Instrument_Serif({
+  weight: "400",
+  subsets: ["latin"],
+  style: ["italic", "normal"],
+  variable: "--font-instrument",
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full antialiased scroll-smooth" suppressHydrationWarning>
+    <html lang="en" className={`h-full antialiased scroll-smooth ${instrument.variable}`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col bg-[#FAFAFA] selection:bg-neutral-200 selection:text-neutral-900">
         <Providers>
           <AuthGuard>

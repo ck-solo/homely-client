@@ -16,6 +16,7 @@ import {
   MoonIcon,
   MusicNotesIcon
 } from "@phosphor-icons/react";
+import GradientText from "@/components/ui/GradientText";
 
 // Types
 type VibeTag = "Night Owl" | "Foodie" | "Quiet Study" | "Music Lover";
@@ -75,7 +76,7 @@ export default function Home() {
     : ROOMMATE_MOCKS;
 
   return (
-    <main className="min-h-screen bg-[#FAFAFA] text-neutral-900 overflow-hidden pt-24 md:pt-36">
+    <main className="min-h-screen bg-[#f8fafc] text-neutral-900 overflow-hidden pt-24 md:pt-36">
       
       {/* 1. HERO SECTION */}
       <section className="px-6 md:px-12 max-w-screen-2xl mx-auto flex flex-col items-center text-center">
@@ -93,9 +94,17 @@ export default function Home() {
           
           <h1 className="text-5xl md:text-7xl lg:text-8xl tracking-tight leading-[1.05] font-normal text-neutral-900">
             Find your space. <br />
-            <span className="text-neutral-400 font-light italic font-serif">Match your vibe.</span>
+            <GradientText
+              colors={["#04384f", "#0f74ff", "#0ea5e9", "#0f74ff"]}
+              animationSpeed={5}
+              showBorder={false}
+              className="font-light italic font-instrument mx-0 inline-block!"
+            >
+              Match your vibe.
+            </GradientText>
           </h1>
-          <p className="mt-8 text-lg md:text-xl text-neutral-500 max-w-2xl mx-auto font-light leading-relaxed">
+          
+          <p className="mt-4 text-md md:text-md text-neutral-500 max-w-xl mx-auto font-normal leading-5">
             Moving to a new city shouldn&apos;t mean compromising on who you live with. Match with roommates who fit your lifestyle and secure premium verified listings.
           </p>
         </motion.div>
@@ -105,7 +114,7 @@ export default function Home() {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full max-w-3xl mt-12 bg-white rounded-3xl p-4 shadow-[0_8px_30px_rgb(0,0,0,0.02)] border border-neutral-200/60"
+          className="w-full max-w-3xl mt-12 bg-white rounded-3xl p-4 shadow-[0_8px_20px_rgb(0,0,0,0.1)] border border-neutral-200/60"
         >
           {/* Sub-navigation Tabs */}
           <div className="flex bg-neutral-100 p-1.5 rounded-2xl w-fit mx-auto md:mx-0">
@@ -148,7 +157,7 @@ export default function Home() {
               />
             </div>
             <Link href="/login" className="w-full md:w-auto">
-              <button className="w-full bg-neutral-900 text-white text-sm font-medium px-6 py-3.5 rounded-2xl hover:bg-neutral-800 transition-colors flex items-center justify-center gap-2 whitespace-nowrap">
+              <button className="w-full bg-linear-to-r from-homely-primary to-homely-secondary text-white shadow-lg shadow-homely-primary/20 hover:shadow-homely-primary/40 text-sm font-medium px-6 py-3.5 rounded-2xl hover:opacity-90 transition-all flex items-center justify-center gap-2 whitespace-nowrap">
                 <MagnifyingGlassIcon size={16} weight="bold" /> Search Now
               </button>
             </Link>
@@ -167,7 +176,7 @@ export default function Home() {
             </span>
             <h2 className="text-3xl md:text-5xl tracking-tight leading-tight font-normal">
               Say goodbye to <br />
-              <span className="text-neutral-400 italic font-serif">roommate roulette.</span>
+              <span className="text-homely-secondary italic font-instrument">roommate roulette.</span>
             </h2>
             <p className="mt-4 text-neutral-400 font-light leading-relaxed text-sm md:text-base">
               Filter profiles cleanly on individual energy preferences. Our matching engine shifts compatibility algorithms dynamically based on real lifestyle values.
@@ -191,7 +200,7 @@ export default function Home() {
                   onClick={() => setSelectedVibe(tag.id)}
                   className={`px-4 py-2 rounded-xl text-xs font-medium border flex items-center gap-1.5 transition-all ${
                     selectedVibe === tag.id
-                      ? "bg-white text-neutral-900 border-white shadow-lg"
+                      ? "bg-linear-to-r from-homely-primary to-homely-secondary text-white border-transparent shadow-[0_0_15px_rgba(99,102,241,0.5)]"
                       : "bg-neutral-800/40 text-neutral-400 border-neutral-800 hover:border-neutral-700"
                   }`}
                 >
@@ -233,7 +242,7 @@ export default function Home() {
                   {/* Tags Group */}
                   <div className="flex gap-1.5 flex-wrap">
                     {person.tags.map((t) => (
-                      <span key={t} className="bg-white/10 text-white text-[10px] px-2.5 py-1 rounded-full font-medium">
+                      <span key={t} className="bg-homely-primary/15 text-homely-secondary border border-homely-primary/20 text-[10px] px-2.5 py-1 rounded-full font-medium">
                         {t}
                       </span>
                     ))}
@@ -268,9 +277,9 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.6, delay: idx * 0.05 }}
-                className="p-8 rounded-2xl bg-neutral-50 hover:bg-neutral-100/70 border border-neutral-200/20 transition-all duration-300 group cursor-default"
+                className="p-8 rounded-2xl bg-white hover:bg-neutral-50/80 border border-neutral-200/40 hover:border-homely-primary/30 hover:shadow-xl hover:shadow-homely-primary/5 hover:-translate-y-1 transition-all duration-300 group cursor-default"
               >
-                <div className="w-12 h-12 rounded-xl bg-white border border-neutral-200/50 flex items-center justify-center mb-6 shadow-xs text-neutral-900 group-hover:bg-neutral-900 group-hover:text-white transition-all duration-300">
+                <div className="w-12 h-12 rounded-xl bg-neutral-50 border border-neutral-200/50 flex items-center justify-center mb-6 shadow-xs text-neutral-900 group-hover:bg-linear-to-br group-hover:from-homely-primary group-hover:to-homely-secondary group-hover:text-white transition-all duration-300">
                   {feature.icon}
                 </div>
                 <h3 className="text-lg font-medium mb-2 text-neutral-900">{feature.title}</h3>
