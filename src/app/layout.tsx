@@ -10,6 +10,9 @@ import AuthGuard from "@/components/AuthGuard";
 export const metadata: Metadata = {
   title: "Homely | Roommate & Rental Finder",
   description: "A curated platform for discovering modern rentals and connecting with roommates who share your vibe.",
+  icons: {
+    icon: "/favicon.png",
+  },
   manifest: "/manifest.json", // Setup for PWA
 };
 
