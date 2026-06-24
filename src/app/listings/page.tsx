@@ -18,6 +18,7 @@ import ListingCard, {
   type Listing,
 } from "@/features/listing/components/ListingCard";
 import MasonryGrid from "@/components/listings/MasonryGrid";
+import { useFavorites } from "@/features/favorite/hooks/useFavorites";
 
 // ─── API Fetcher ────────────────────────────────────────
 interface ListingsResponse {
@@ -42,6 +43,13 @@ const fetchListings = async (params: Record<string, string>): Promise<ListingsRe
 function ListingsPageInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { loadFavorites, hasFetched } = useFavorites();
+
+  useEffect(() => {
+    if (!hasFetched) {
+      loadFavorites();
+    }
+  }, [hasFetched, loadFavorites]);
 
   // ─── State from URL params ────────────────────────────
   const [searchTerm, setSearchTerm] = useState(searchParams.get("search") || "");

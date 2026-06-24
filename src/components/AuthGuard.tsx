@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useAppSelector } from "@/redux/store";
+import toast from "react-hot-toast";
 
 const publicRoutes = [
   "/",
@@ -16,6 +17,10 @@ const publicRoutes = [
 
 // Only these pages should redirect authenticated users away
 const authOnlyRoutes = ["/login", "/register"];
+
+// Role-restricted routes
+const ownerOnlyRoutes = ["/create-listing", "/edit-listing"];
+const tenantOnlyRoutes = ["/saved-listings"];
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading, user } = useAppSelector(
@@ -55,6 +60,28 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
         router.push(dashboardUrl);
       }
     }
+
+    // Role-based route protection: OWNER-only routes
+    if (isAuthenticated && user) {
+      const isOwnerOnlyRoute = ownerOnlyRoutes.some(
+        (route) => pathname === route || pathname.startsWith(route + "/"),
+      );
+      if (isOwnerOnlyRoute && user.role !== "OWNER") {
+        toast.error("Only property owners can access this page.");
+        router.push("/dashboard/tenant");
+        return;
+      }
+
+      // Role-based route protection: TENANT-only routes
+      const isTenantOnlyRoute = tenantOnlyRoutes.some(
+        (route) => pathname === route || pathname.startsWith(route + "/"),
+      );
+      if (isTenantOnlyRoute && user.role !== "TENANT") {
+        toast.error("This page is only available for tenants.");
+        router.push("/dashboard/owner");
+        return;
+      }
+    }
   }, [isAuthenticated, isLoading, pathname, router, user]);
 
   if (isLoading) {
@@ -63,3 +90,4 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
   return <>{children}</>;
 }
+

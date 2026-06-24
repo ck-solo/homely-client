@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { ListingForm as ListingFormType, ListingImage } from "@/types/Ilisting.type";
@@ -8,10 +8,20 @@ import ListingCard from "@/features/listing/components/ListingCard";
 import ListingForm from "@/features/listing/components/ListingForm";
 import { useListing } from "@/features/listing/hooks/useListing";
 import { createListingAction } from "@/features/listing/slice/listing.slice";
+import { useAppSelector } from "@/redux/store";
 
 export default function CreateListingPage() {
   const router = useRouter();
+  const { user } = useAppSelector((state) => state.auth);
   const { createListing, isLoading } = useListing();
+
+  // Defense-in-depth: redirect non-OWNER users
+  useEffect(() => {
+    if (user && user.role !== "OWNER") {
+      toast.error("Only property owners can list properties.");
+      router.push("/dashboard/tenant");
+    }
+  }, [user, router]);
   const [form, setForm] = useState<ListingFormType>({
     title: "",
     description: "",

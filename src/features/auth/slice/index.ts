@@ -12,19 +12,46 @@ interface AuthState {
   accessToken: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isInitialized: boolean;
   error: string | null;
 }
 
-// Initial state
+// SSR-safe initial state — no localStorage access at module load
 const initialState: AuthState = {
-  user: typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('user') || 'null') : null,
-  accessToken: typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null,
-  isAuthenticated: typeof window !== 'undefined' ? !!localStorage.getItem('accessToken') : false,
-  isLoading: false,
+  user: null,
+  accessToken: null,
+  isAuthenticated: false,
+  isLoading: true, // Start true until initializeAuth runs
+  isInitialized: false,
   error: null,
 };
 
 // Async Thunks
+
+/**
+ * Hydrates auth state from localStorage on client-side mount.
+ * Prevents SSR/hydration mismatches by deferring localStorage access.
+ */
+export const initializeAuth = createAsyncThunk<
+  { user: User | null; accessToken: string | null },
+  void,
+  { rejectValue: string }
+>('auth/initialize', async (_, { rejectWithValue }) => {
+  try {
+    if (typeof window === 'undefined') {
+      return { user: null, accessToken: null };
+    }
+
+    const accessToken = localStorage.getItem('accessToken');
+    const userStr = localStorage.getItem('user');
+    const user = userStr ? JSON.parse(userStr) : null;
+
+    return { user, accessToken };
+  } catch {
+    return rejectWithValue('Failed to initialize auth state');
+  }
+});
+
 export const registerUser = createAsyncThunk<AuthResponse, RegisterRequest, { rejectValue: string }>(
   'auth/register',
   async (userData, { rejectWithValue }) => {
@@ -88,8 +115,12 @@ export const getMe = createAsyncThunk<AuthResponse, void, { rejectValue: string 
     try {
       const data = await getMeApi();
       return data;
-    } catch (_error: unknown) {
-      return rejectWithValue('Failed to load user profile.');
+    } catch (error: unknown) {
+      const apiError = error as ApiErrorResponse;
+      // Pass through status code info so the reducer can decide whether to clear auth
+      const status = (error as { response?: { status?: number } })?.response?.status;
+      const message = apiError.response?.data?.message || 'Failed to load user profile.';
+      return rejectWithValue(status === 401 || status === 403 ? `AUTH_ERROR:${message}` : message);
     }
   }
 );
@@ -102,15 +133,41 @@ const authSlice = createSlice({
     clearError: (state) => {
       state.error = null;
     },
+    /**
+     * Used by the axios interceptor to update the access token after a refresh,
+     * keeping Redux state in sync with localStorage.
+     */
+    setCredentials: (state, action: PayloadAction<{ accessToken: string }>) => {
+      state.accessToken = action.payload.accessToken;
+      state.isAuthenticated = true;
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('accessToken', action.payload.accessToken);
+      }
+    },
     logout: (state) => {
       state.user = null;
       state.accessToken = null;
       state.isAuthenticated = false;
-      localStorage.removeItem('user');
-      localStorage.removeItem('accessToken');
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('user');
+        localStorage.removeItem('accessToken');
+      }
     }
   },
   extraReducers: (builder) => {
+    // Initialize Auth (hydrate from localStorage)
+    builder.addCase(initializeAuth.fulfilled, (state, action) => {
+      state.user = action.payload.user;
+      state.accessToken = action.payload.accessToken;
+      state.isAuthenticated = !!action.payload.accessToken;
+      state.isLoading = false;
+      state.isInitialized = true;
+    });
+    builder.addCase(initializeAuth.rejected, (state) => {
+      state.isLoading = false;
+      state.isInitialized = true;
+    });
+
     // Register
     builder.addCase(registerUser.pending, (state) => {
       state.isLoading = true;
@@ -180,16 +237,21 @@ const authSlice = createSlice({
       state.user = action.payload.data.user;
       localStorage.setItem('user', JSON.stringify(action.payload.data.user));
     });
-    builder.addCase(getMe.rejected, (state) => {
-      state.user = null;
-      state.accessToken = null;
-      state.isAuthenticated = false;
-      localStorage.removeItem('user');
-      localStorage.removeItem('accessToken');
+    builder.addCase(getMe.rejected, (state, action) => {
+      // Only clear auth state on explicit auth failures (401/403), not on network errors
+      const payload = action.payload || '';
+      if (typeof payload === 'string' && payload.startsWith('AUTH_ERROR:')) {
+        state.user = null;
+        state.accessToken = null;
+        state.isAuthenticated = false;
+        localStorage.removeItem('user');
+        localStorage.removeItem('accessToken');
+      }
+      // On network errors, keep the user logged in with their cached data
     });
   },
 });
 
-export const { clearError, logout } = authSlice.actions;
+export const { clearError, logout, setCredentials } = authSlice.actions;
 export default authSlice.reducer;
 

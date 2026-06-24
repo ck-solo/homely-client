@@ -45,7 +45,7 @@ function VerifyEmailContent() {
     };
 
     runVerify();
-  }, [token, verify, router]);
+  }, [token, verify, router, isAuthenticated, user]);
 
   return (
     <div className="flex flex-col items-center justify-center w-full min-h-[60vh]">

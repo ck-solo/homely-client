@@ -16,7 +16,8 @@ const NAV_LINKS = [
   { name: "Explore Rentals", href: "/listings" },
   { name: "Roommates", href: "/#roommates" },
   { name: "Vibe Match", href: "/#vibe-match" },
-  { name: "List Property", href: "/create-listing", authRequired: false, hideForOwner: true },
+  { name: "List Property", href: "/create-listing", ownerOnly: true },
+  { name: "Saved Listings", href: "/saved-listings", tenantOnly: true },
 ];
 
 export default function Navbar() {
@@ -142,7 +143,10 @@ export default function Navbar() {
               {/* Main Navigation Links */}
               <nav className="flex flex-col gap-4 md:gap-6">
                 {NAV_LINKS.map((link, i) => {
-                  if (link.hideForOwner && mounted && isAuthenticated && user?.role === "OWNER") return null;
+                  // Owner-only links: hide from non-owners (tenants and unauthenticated users)
+                  if (link.ownerOnly && mounted && (!isAuthenticated || user?.role !== "OWNER")) return null;
+                  // Tenant-only links: hide from non-tenants (owners and unauthenticated users)
+                  if (link.tenantOnly && mounted && (!isAuthenticated || user?.role !== "TENANT")) return null;
 
                   return (
                     <motion.div

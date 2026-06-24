@@ -108,7 +108,7 @@ export default function OwnerDashboard() {
             Here is the status of your listed properties and rentals.
           </p>
         </div>
-        <Link href="/list-property">
+        <Link href="/create-listing">
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}

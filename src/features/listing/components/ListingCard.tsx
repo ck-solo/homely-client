@@ -2,9 +2,11 @@
 
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPinIcon, HeartIcon, PencilSimpleIcon } from "@phosphor-icons/react";
+import { MapPinIcon, HeartIcon, PencilSimpleIcon, SpinnerIcon } from "@phosphor-icons/react";
 import { useAppSelector } from "@/redux/store";
 import { useRouter } from "next/navigation";
+import { useFavorites } from "@/features/favorite/hooks/useFavorites";
+import toast from "react-hot-toast";
 
 export interface Listing {
   _id: string;
@@ -49,6 +51,7 @@ export default function ListingCard({
 }: ListingCardProps) {
   const user = useAppSelector((state) => state.auth.user);
   const router = useRouter();
+  const { isFavorited, toggle, isToggling, isTenant } = useFavorites();
 
   // Resolve properties dynamically from listing object or individual props
   const title = listing?.title ?? propTitle ?? "Discovering peace";
@@ -59,6 +62,20 @@ export default function ListingCard({
   const amenities = listing?.amenities ?? propAmenities ?? [];
   const images = listing?.images ?? propImages;
   const city = listing?.city ?? propCity ?? "Blue Ridge";
+
+  const isCurrentlyFavorited = listing?._id ? isFavorited(listing._id) : false;
+  const isCurrentlyToggling = listing?._id ? isToggling === listing._id : false;
+
+  const handleToggleFavorite = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!listing?._id) return;
+    if (!isTenant) {
+      toast.error("Only tenants can save listings.");
+      return;
+    }
+    await toggle(listing._id);
+  };
 
   const displayImageUrl = React.useMemo(() => {
     if (!images || images.length === 0) return null;
@@ -197,14 +214,24 @@ export default function ListingCard({
             </button>
           )}
 
-          {/* Favorite button (only visible on browse page when listing ID is present) */}
-          {listing?._id && (
+          {/* Favorite button — only visible for TENANT users on browse pages */}
+          {listing?._id && isTenant && (
             <button
-              className="p-2.5 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white text-neutral-500 hover:text-red-500 transition-all duration-200 shadow-md border border-neutral-100/40"
-              aria-label="Add to favorites"
+              onClick={handleToggleFavorite}
+              disabled={isCurrentlyToggling}
+              className={`p-2.5 rounded-full backdrop-blur-sm transition-all duration-200 shadow-md border border-neutral-100/40 ${
+                isCurrentlyFavorited
+                  ? "bg-red-50/90 text-red-500 hover:bg-red-100"
+                  : "bg-white/80 hover:bg-white text-neutral-500 hover:text-red-500"
+              }`}
+              aria-label={isCurrentlyFavorited ? "Remove from favorites" : "Add to favorites"}
               id={`favorite-btn-${listing._id}`}
             >
-              <HeartIcon size={18} weight="regular" />
+              {isCurrentlyToggling ? (
+                <SpinnerIcon size={18} weight="regular" className="animate-spin" />
+              ) : (
+                <HeartIcon size={18} weight={isCurrentlyFavorited ? "fill" : "regular"} />
+              )}
             </button>
           )}
         </div>

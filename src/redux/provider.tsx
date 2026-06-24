@@ -3,14 +3,39 @@
 import { Provider } from "react-redux";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
-import { store } from "./store";
+import { useEffect } from "react";
+import { store, useAppDispatch } from "./store";
 import queryClient from "@/config/tanstack";
+import { initializeAuth, getMe } from "@/features/auth/slice";
+
+/**
+ * Inner component that has access to the Redux store context.
+ * Handles auth initialization on app mount.
+ */
+function AuthInitializer({ children }: { children: React.ReactNode }) {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const init = async () => {
+      const result = await dispatch(initializeAuth());
+      // If we have a token, verify it's still valid by fetching user profile
+      if (initializeAuth.fulfilled.match(result) && result.payload.accessToken) {
+        dispatch(getMe());
+      }
+    };
+    init();
+  }, [dispatch]);
+
+  return <>{children}</>;
+}
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
-        {children}
+        <AuthInitializer>
+          {children}
+        </AuthInitializer>
 
         <Toaster
           position="top-right"
