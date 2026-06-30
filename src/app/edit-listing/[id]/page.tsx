@@ -156,20 +156,20 @@ export default function EditListingPage() {
 
   if (isFetching) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white text-neutral-500">
+      <div className="min-h-screen flex items-center justify-center bg-luxury-bg text-luxury-text-muted">
         Loading listing data...
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen bg-white text-neutral-900">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-luxury-bg text-luxury-text-beige">
       {/* LEFT PANEL - LIVE PREVIEW */}
-      <div className="w-full lg:w-1/2 lg:h-screen lg:sticky lg:top-0 bg-[#F5F5F7] flex flex-col justify-center items-center p-6 md:p-12 border-b lg:border-b-0 lg:border-r border-neutral-200/50 overflow-hidden relative">
+      <div className="w-full lg:w-1/2 lg:h-screen lg:sticky lg:top-0 bg-luxury-bg flex flex-col justify-center items-center p-6 md:p-12 border-b lg:border-b-0 lg:border-r border-luxury-border overflow-hidden relative">
         <div className="flex flex-col items-start gap-4">
           {/* Live Preview Title Tag */}
-          <div className="top-6 left-6 flex items-center gap-2 px-3 py-1.5 rounded-full bg-white shadow-sm text-xs font-medium text-black tracking-wider uppercase">
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+          <div className="top-6 left-6 flex items-center gap-2 px-3 py-1.5 rounded-full bg-luxury-card border border-luxury-border shadow-sm text-xs font-medium text-luxury-gold tracking-wider uppercase">
+            <span className="w-1.5 h-1.5 rounded-full bg-luxury-gold animate-pulse" />
             Edit Mode Preview
           </div>
 
@@ -187,14 +187,14 @@ export default function EditListingPage() {
       </div>
 
       {/* RIGHT PANEL - FORM CONTAINER */}
-      <div className="w-full lg:w-1/2 min-h-screen overflow-y-auto bg-neutral-50 pt-20 md:pt-24 pb-16 px-6 md:px-12 lg:px-16 flex flex-col justify-start">
+      <div className="w-full lg:w-1/2 min-h-screen overflow-y-auto bg-luxury-bg pt-20 md:pt-24 pb-16 px-6 md:px-12 lg:px-16 flex flex-col justify-start">
         <div className="max-w-xl w-full mx-auto">
           {/* Header */}
           <div className="mb-10">
-            <h1 className="text-2xl md:text-3xl font-medium tracking-tight text-neutral-900">
+            <h1 className="text-3xl md:text-4xl font-instrument tracking-tight text-luxury-text-beige">
               Edit Your Property
             </h1>
-            <p className="text-sm text-neutral-500 font-light mt-1.5 leading-relaxed">
+            <p className="text-sm text-luxury-text-muted font-light mt-1.5 leading-relaxed">
               Update the specifications below to reflect the latest details of your
               listed space.
             </p>

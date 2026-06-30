@@ -112,8 +112,8 @@ export default function FilterPanel({
             border transition-all duration-200
             ${
               isExpanded || activeFilterCount > 0
-                ? "bg-neutral-900 text-white border-neutral-900"
-                : "bg-white text-neutral-700 border-neutral-200 hover:border-neutral-300"
+                ? "bg-luxury-gold text-luxury-bg border-luxury-gold"
+                : "bg-luxury-card text-luxury-text-beige border-luxury-border hover:border-luxury-gold/50 luxury-hover-glow"
             }
           `}
           id="filter-toggle-btn"
@@ -121,7 +121,7 @@ export default function FilterPanel({
           <Funnel size={16} weight={activeFilterCount > 0 ? "fill" : "regular"} />
           Filters
           {activeFilterCount > 0 && (
-            <span className="ml-1 px-1.5 py-0.5 rounded-full bg-white/20 text-xs">
+            <span className="ml-1 px-1.5 py-0.5 rounded-full bg-luxury-bg/20 text-luxury-bg text-xs">
               {activeFilterCount}
             </span>
           )}
@@ -138,8 +138,8 @@ export default function FilterPanel({
                 border transition-all duration-200
                 ${
                   filters.type.includes(t)
-                    ? "bg-neutral-900 text-white border-neutral-900"
-                    : "bg-white text-neutral-600 border-neutral-200 hover:border-neutral-400 hover:text-neutral-900"
+                    ? "bg-luxury-gold text-luxury-bg border-luxury-gold"
+                    : "bg-luxury-card text-luxury-text-muted border-luxury-border hover:border-luxury-gold/50 hover:text-luxury-text-beige luxury-hover-glow"
                 }
               `}
               id={`filter-type-${t.toLowerCase()}`}
@@ -148,7 +148,7 @@ export default function FilterPanel({
             </button>
           ))}
 
-          <div className="w-px h-6 bg-neutral-200 mx-1" />
+          <div className="w-px h-6 bg-luxury-border mx-1" />
 
           {GENDER_OPTIONS.map((g) => (
             <button
@@ -159,8 +159,8 @@ export default function FilterPanel({
                 border transition-all duration-200
                 ${
                   filters.gender.includes(g)
-                    ? "bg-neutral-900 text-white border-neutral-900"
-                    : "bg-white text-neutral-600 border-neutral-200 hover:border-neutral-400 hover:text-neutral-900"
+                    ? "bg-luxury-gold text-luxury-bg border-luxury-gold"
+                    : "bg-luxury-card text-luxury-text-muted border-luxury-border hover:border-luxury-gold/50 hover:text-luxury-text-beige luxury-hover-glow"
                 }
               `}
               id={`filter-gender-${g.toLowerCase()}`}
@@ -176,7 +176,7 @@ export default function FilterPanel({
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             onClick={onReset}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 border border-red-100 transition-colors duration-200"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-red-400 hover:text-red-300 bg-red-900/20 hover:bg-red-900/40 border border-red-500/30 transition-colors duration-200"
             id="filter-reset-btn"
           >
             <X size={12} weight="bold" />
@@ -186,7 +186,7 @@ export default function FilterPanel({
 
         {/* Result Count */}
         {resultCount !== undefined && (
-          <span className="text-sm text-neutral-400 ml-auto">
+          <span className="text-sm text-luxury-text-muted ml-auto">
             {resultCount} {resultCount === 1 ? "listing" : "listings"} found
           </span>
         )}
@@ -202,12 +202,12 @@ export default function FilterPanel({
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
             className="overflow-hidden"
           >
-            <div className="mt-4 p-6 bg-white rounded-2xl border border-neutral-200 shadow-sm">
+            <div className="mt-4 p-6 bg-luxury-card rounded-2xl border border-luxury-border shadow-sm">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
                 {/* Property Type (mobile only — desktop uses pills above) */}
                 <div className="md:hidden">
-                  <h4 className="text-xs font-semibold uppercase tracking-widest text-neutral-400 mb-3">
+                  <h4 className="text-xs font-semibold uppercase tracking-widest text-luxury-text-muted mb-3">
                     Property Type
                   </h4>
                   <div className="flex flex-wrap gap-2">
@@ -219,8 +219,8 @@ export default function FilterPanel({
                           px-3.5 py-2 rounded-xl text-xs font-medium border transition-all duration-200
                           ${
                             filters.type.includes(t)
-                              ? "bg-neutral-900 text-white border-neutral-900"
-                              : "bg-neutral-50 text-neutral-600 border-neutral-200"
+                              ? "bg-luxury-gold text-luxury-bg border-luxury-gold"
+                              : "bg-luxury-bg text-luxury-text-muted border-luxury-border"
                           }
                         `}
                       >
@@ -232,7 +232,7 @@ export default function FilterPanel({
 
                 {/* Gender Preference (mobile only) */}
                 <div className="md:hidden">
-                  <h4 className="text-xs font-semibold uppercase tracking-widest text-neutral-400 mb-3">
+                  <h4 className="text-xs font-semibold uppercase tracking-widest text-luxury-text-muted mb-3">
                     Gender Preference
                   </h4>
                   <div className="flex flex-wrap gap-2">
@@ -244,8 +244,8 @@ export default function FilterPanel({
                           px-3.5 py-2 rounded-xl text-xs font-medium border transition-all duration-200
                           ${
                             filters.gender.includes(g)
-                              ? "bg-neutral-900 text-white border-neutral-900"
-                              : "bg-neutral-50 text-neutral-600 border-neutral-200"
+                              ? "bg-luxury-gold text-luxury-bg border-luxury-gold"
+                              : "bg-luxury-bg text-luxury-text-muted border-luxury-border"
                           }
                         `}
                       >
@@ -257,16 +257,16 @@ export default function FilterPanel({
 
                 {/* Rent Range Slider */}
                 <div className="md:col-span-3">
-                  <h4 className="text-xs font-semibold uppercase tracking-widest text-neutral-400 mb-4">
+                  <h4 className="text-xs font-semibold uppercase tracking-widest text-luxury-text-muted mb-4">
                     Rent Range
                   </h4>
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-lg font-semibold text-neutral-900">
+                      <span className="text-lg font-semibold text-luxury-text-beige">
                         {formatRent(filters.minRent)}
                       </span>
-                      <span className="text-xs text-neutral-400 mx-4">to</span>
-                      <span className="text-lg font-semibold text-neutral-900">
+                      <span className="text-xs text-luxury-text-muted mx-4">to</span>
+                      <span className="text-lg font-semibold text-luxury-text-beige">
                         {formatRent(filters.maxRent)}
                       </span>
                     </div>
@@ -274,10 +274,10 @@ export default function FilterPanel({
                     {/* Dual Range Slider */}
                     <div className="relative h-2">
                       {/* Track background */}
-                      <div className="absolute inset-0 rounded-full bg-neutral-100" />
+                      <div className="absolute inset-0 rounded-full bg-luxury-bg" />
                       {/* Active track */}
                       <div
-                        className="absolute h-full rounded-full bg-neutral-900"
+                        className="absolute h-full rounded-full bg-luxury-gold"
                         style={{
                           left: `${((filters.minRent - RENT_MIN) / (RENT_MAX - RENT_MIN)) * 100}%`,
                           right: `${100 - ((filters.maxRent - RENT_MIN) / (RENT_MAX - RENT_MIN)) * 100}%`,
@@ -294,13 +294,13 @@ export default function FilterPanel({
                         className="absolute inset-0 w-full appearance-none bg-transparent pointer-events-auto z-20
                           [&::-webkit-slider-thumb]:appearance-none
                           [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5
-                          [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white
-                          [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-neutral-900
+                          [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-luxury-text-beige
+                          [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-luxury-gold
                           [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-md
                           [&::-webkit-slider-thumb]:hover:scale-110 [&::-webkit-slider-thumb]:transition-transform
                           [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5
-                          [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white
-                          [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-neutral-900
+                          [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-luxury-text-beige
+                          [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-luxury-gold
                           [&::-moz-range-thumb]:cursor-pointer"
                         id="filter-rent-min"
                       />
@@ -315,20 +315,20 @@ export default function FilterPanel({
                         className="absolute inset-0 w-full appearance-none bg-transparent pointer-events-auto z-20
                           [&::-webkit-slider-thumb]:appearance-none
                           [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5
-                          [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white
-                          [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-neutral-900
+                          [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-luxury-text-beige
+                          [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-luxury-gold
                           [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-md
                           [&::-webkit-slider-thumb]:hover:scale-110 [&::-webkit-slider-thumb]:transition-transform
                           [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5
-                          [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white
-                          [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-neutral-900
+                          [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-luxury-text-beige
+                          [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-luxury-gold
                           [&::-moz-range-thumb]:cursor-pointer"
                         id="filter-rent-max"
                       />
                     </div>
 
                     {/* Labels */}
-                    <div className="flex justify-between text-xs text-neutral-400">
+                    <div className="flex justify-between text-xs text-luxury-text-muted">
                       <span>{formatRent(RENT_MIN)}</span>
                       <span>{formatRent(RENT_MAX)}</span>
                     </div>

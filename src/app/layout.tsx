@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#FAFAFA", // Light mode compatibility
+  themeColor: "#11100e", // Dark luxury theme compatibility
 };
 
 const instrument = Instrument_Serif({
@@ -34,7 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`h-full antialiased scroll-smooth ${instrument.variable}`} suppressHydrationWarning>
-      <body className="min-h-full flex flex-col bg-[#FAFAFA] selection:bg-neutral-200 selection:text-neutral-900">
+      <body className="min-h-full flex flex-col bg-luxury-bg text-luxury-text-beige selection:bg-luxury-gold selection:text-luxury-bg">
         <Providers>
           <AuthGuard>
             <Navbar />

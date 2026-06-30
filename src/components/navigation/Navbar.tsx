@@ -49,7 +49,7 @@ export default function Navbar() {
         animate={{ y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 md:px-12 md:py-6 transition-colors duration-500 ${
-          isOpen ? "bg-transparent text-white" : "bg-white/70 backdrop-blur-md border-b border-neutral-200/50 text-neutral-900"
+          isOpen ? "bg-transparent text-luxury-text-beige" : "bg-luxury-bg/80 backdrop-blur-md border-b border-luxury-border text-luxury-text-beige"
         }`}
       >
         {/* Brand */}
@@ -73,7 +73,7 @@ export default function Navbar() {
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-colors bg-neutral-900 text-white hover:bg-neutral-800 shadow-[0_0_15px_rgba(99,102,241,0.2)]"
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all bg-luxury-gold text-luxury-bg hover:bg-luxury-gold-light luxury-hover-glow"
                   >
                     Get Started <ArrowRight size={16} />
                   </motion.button>
@@ -87,8 +87,8 @@ export default function Navbar() {
           {/* Animated Menu Toggle Pill */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className={`relative flex items-center justify-center w-[80px] h-[40px] rounded-full overflow-hidden transition-all duration-300 shadow-sm ${
-              isOpen ? "bg-white/10 hover:bg-white/20 text-white border border-white/20" : "bg-neutral-100 hover:bg-neutral-200 text-neutral-900 border border-neutral-200/50"
+            className={`relative flex items-center justify-center w-[80px] h-[40px] rounded-full overflow-hidden transition-all duration-300 luxury-hover-glow ${
+              isOpen ? "bg-luxury-card hover:bg-luxury-bg-lighter text-luxury-gold border border-luxury-gold" : "bg-luxury-card hover:bg-luxury-bg-lighter text-luxury-text-beige border border-luxury-border"
             }`}
           >
             <AnimatePresence mode="wait">
@@ -128,13 +128,13 @@ export default function Navbar() {
             animate={{ y: 0 }}
             exit={{ y: "-100%" }}
             transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
-            className="fixed inset-0 z-40 bg-neutral-950 flex flex-col justify-center px-6 md:px-12 pt-20"
+            className="fixed inset-0 z-40 bg-luxury-bg flex flex-col justify-center px-6 md:px-12 pt-20"
           >
             {/* Mesh gradient effect inside overlay */}
-            <div className="absolute inset-0 opacity-20 pointer-events-none" style={{
+            <div className="absolute inset-0 opacity-10 pointer-events-none" style={{
               backgroundImage: `
-                radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.5) 0px, transparent 40%),
-                radial-gradient(circle at 80% 70%, rgba(14, 165, 233, 0.5) 0px, transparent 40%)
+                radial-gradient(circle at 20% 30%, rgba(201, 164, 92, 0.15) 0px, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(201, 164, 92, 0.1) 0px, transparent 40%)
               `
             }} />
 
@@ -159,7 +159,7 @@ export default function Navbar() {
                       <Link
                         href={link.href}
                         onClick={() => setIsOpen(false)}
-                        className="group inline-flex items-center text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-neutral-400 hover:text-white transition-colors font-instrument italic tracking-tight"
+                        className="group inline-flex items-center text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-luxury-text-muted hover:text-luxury-gold transition-colors font-instrument italic tracking-tight"
                       >
                         <motion.span 
                           className="inline-block transition-transform duration-500 ease-[0.16,1,0.3,1] group-hover:translate-x-6"
@@ -219,7 +219,7 @@ export default function Navbar() {
                     <Link href="/login" onClick={() => setIsOpen(false)}>
                       <motion.button
                         whileTap={{ scale: 0.98 }}
-                        className="flex items-center gap-2 bg-white text-neutral-900 px-6 py-3 rounded-full text-sm font-medium hover:bg-neutral-200 transition-colors w-fit shadow-[0_0_15px_rgba(99,102,241,0.3)]"
+                        className="flex items-center gap-2 bg-luxury-gold text-luxury-bg px-6 py-3 rounded-full text-sm font-medium hover:bg-luxury-gold-light transition-all w-fit luxury-hover-glow"
                       >
                         Get Started <ArrowRight size={16} />
                       </motion.button>

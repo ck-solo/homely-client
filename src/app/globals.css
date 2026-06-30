@@ -1,31 +1,31 @@
 @import "tailwindcss";
 
 @theme {
-  --color-sky-500: #0ea5e9;
-  --color-indigo-500: #6366f1;
-  --color-violet-500: #8b5cf6;
-  --color-blue-500: #3b82f6;
-  
-  --color-homely-primary: var(--color-indigo-500);
-  --color-homely-secondary: var(--color-sky-500);
+  --color-luxury-bg: #11100e;
+  --color-luxury-bg-lighter: #161412;
+  --color-luxury-card: #1c1916;
+  --color-luxury-gold: #c9a45c;
+  --color-luxury-gold-light: #d6b36a;
+  --color-luxury-border: rgba(201, 164, 92, 0.25);
+  --color-luxury-text-beige: #f5efe6;
+  --color-luxury-text-muted: #b8aa96;
   
   --font-instrument: var(--font-instrument), serif;
 }
 
 body {
   font-family: "GeneralSans", sans-serif;
+  background-color: var(--color-luxury-bg);
+  color: var(--color-luxury-text-beige);
 }
 
 /* === GLOBAL SCROLLBAR REMOVAL === */
 html,
 body {
     scrollbar-width: none;
-    /* Firefox */
     -ms-overflow-style: none;
-    /* IE and old Edge */
 }
 
-/* Chrome, Safari, Edge (WebKit-based) */
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
     width: 0;
@@ -63,22 +63,15 @@ body::-webkit-scrollbar {
   animation: spin-slow 20s linear infinite;
 }
 
-/* === MESH BACKGROUND === */
-.bg-mesh {
-  background-color: #f8fafc;
-  background-image: 
-    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.25) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(14, 165, 233, 0.25) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.20) 0px, transparent 50%),
-    radial-gradient(at 0% 100%, rgba(59, 130, 246, 0.25) 0px, transparent 50%);
-  background-size: 200% 200%;
-  animation: mesh-gradient-anim 15s ease infinite;
+/* === LUXURY HOVER EFFECTS === */
+.luxury-hover-glow {
+  transition: all 0.3s ease;
+}
+.luxury-hover-glow:hover {
+  box-shadow: 0 0 15px rgba(201, 164, 92, 0.2);
+  border-color: var(--color-luxury-gold-light);
 }
 
-@keyframes mesh-gradient-anim {
-  0% { background-position: 0% 0%; }
-  25% { background-position: 100% 0%; }
-  50% { background-position: 100% 100%; }
-  75% { background-position: 0% 100%; }
-  100% { background-position: 0% 0%; }
+.luxury-border {
+  border: 1px solid var(--color-luxury-border);
 }

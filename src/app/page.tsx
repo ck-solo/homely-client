@@ -76,36 +76,31 @@ export default function Home() {
     : ROOMMATE_MOCKS;
 
   return (
-    <main className="min-h-screen bg-[#f8fafc] text-neutral-900 overflow-hidden pt-24 md:pt-36">
+    <main className="min-h-screen bg-luxury-bg text-luxury-text-beige overflow-hidden">
       
       {/* 1. HERO SECTION */}
-      <section className="px-6 md:px-12 max-w-screen-2xl mx-auto flex flex-col items-center text-center">
+      <section className="relative px-6 md:px-12 pt-32 pb-24 md:pt-48 md:pb-32 flex flex-col items-center text-center border-b border-luxury-border">
+        {/* Dark Cinematic Overlay */}
+        <div className="absolute inset-0 z-0 bg-[url('https://images.unsplash.com/photo-1542314831-c6a4d27ece91?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center bg-no-repeat opacity-20 mix-blend-luminosity"></div>
+        <div className="absolute inset-0 z-0 bg-linear-to-b from-luxury-bg/50 via-luxury-bg/80 to-luxury-bg"></div>
+
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          className="max-w-4xl"
+          className="relative z-10 max-w-4xl"
         >
-          {/* Context Badge */}
-          <span className="inline-flex items-center gap-2 bg-neutral-100 text-neutral-800 text-xs px-4 py-1.5 rounded-full mb-6 font-medium tracking-wide uppercase border border-neutral-200/40">
-            <StarIcon size={14} weight="fill" className="text-neutral-900 animate-spin-slow" /> 
-            The Social Roommate Ecosystem
+          <span className="inline-flex items-center gap-2 text-luxury-gold text-xs px-4 py-1.5 mb-6 font-medium tracking-[0.2em] uppercase border border-luxury-gold/30 rounded-full bg-luxury-card/50 backdrop-blur-xs">
+            <StarIcon size={14} weight="fill" /> 
+            Luxury Hotel & Resort
           </span>
           
-          <h1 className="text-5xl md:text-7xl lg:text-8xl tracking-tight leading-[1.05] font-normal text-neutral-900">
-            Find your space. <br />
-            <GradientText
-              colors={["#04384f", "#0f74ff", "#0ea5e9", "#0f74ff"]}
-              animationSpeed={5}
-              showBorder={false}
-              className="font-light italic font-instrument mx-0 inline-block!"
-            >
-              Match your vibe.
-            </GradientText>
+          <h1 className="text-5xl md:text-7xl lg:text-8xl tracking-tight leading-[1.05] font-instrument text-luxury-text-beige">
+            Find Your <span className="text-luxury-gold italic">Luxury</span> Stay
           </h1>
           
-          <p className="mt-4 text-md md:text-md text-neutral-500 max-w-xl mx-auto font-normal leading-5">
-            Moving to a new city shouldn&apos;t mean compromising on who you live with. Match with roommates who fit your lifestyle and secure premium verified listings.
+          <p className="mt-6 text-md md:text-lg text-luxury-text-muted max-w-xl mx-auto font-light leading-relaxed">
+            Discover premium villas, resorts, and boutique hotels curated for the ultimate experience.
           </p>
         </motion.div>
 
@@ -114,51 +109,45 @@ export default function Home() {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full max-w-3xl mt-12 bg-white rounded-3xl p-4 shadow-[0_8px_20px_rgb(0,0,0,0.1)] border border-neutral-200/60"
+          className="relative z-10 w-full max-w-3xl mt-12 bg-luxury-card/80 backdrop-blur-xl rounded-2xl p-4 border border-luxury-border shadow-2xl"
         >
           {/* Sub-navigation Tabs */}
-          <div className="flex bg-neutral-100 p-1.5 rounded-2xl w-fit mx-auto md:mx-0">
+          <div className="flex bg-luxury-bg p-1.5 rounded-xl w-fit mx-auto md:mx-0 border border-luxury-border/50">
             <button
               onClick={() => setActiveTab("roommates")}
-              className={`relative px-5 py-2 text-sm rounded-xl font-medium transition-colors ${
-                activeTab === "roommates" ? "text-neutral-900" : "text-neutral-500 hover:text-neutral-800"
+              className={`relative px-5 py-2 text-sm rounded-lg font-medium transition-all duration-300 ${
+                activeTab === "roommates" ? "text-luxury-bg bg-luxury-gold shadow-md" : "text-luxury-text-muted hover:text-luxury-text-beige"
               }`}
             >
-              {activeTab === "roommates" && (
-                <motion.div layoutId="activeHubTab" className="absolute inset-0 bg-white shadow-sm rounded-xl" />
-              )}
               <span className="relative z-10 flex items-center gap-2">
-                <UsersIcon size={16} /> Find Roommates
+                <UsersIcon size={16} /> Shared Spaces
               </span>
             </button>
             <button
               onClick={() => setActiveTab("rentals")}
-              className={`relative px-5 py-2 text-sm rounded-xl font-medium transition-colors ${
-                activeTab === "rentals" ? "text-neutral-900" : "text-neutral-500 hover:text-neutral-800"
+              className={`relative px-5 py-2 text-sm rounded-lg font-medium transition-all duration-300 ${
+                activeTab === "rentals" ? "text-luxury-bg bg-luxury-gold shadow-md" : "text-luxury-text-muted hover:text-luxury-text-beige"
               }`}
             >
-              {activeTab === "rentals" && (
-                <motion.div layoutId="activeHubTab" className="absolute inset-0 bg-white shadow-sm rounded-xl" />
-              )}
               <span className="relative z-10 flex items-center gap-2">
-                <HouseLineIcon size={16} /> Explore Rentals
+                <HouseLineIcon size={16} /> Premium Rentals
               </span>
             </button>
           </div>
 
           {/* Dynamic Search Box Layout */}
-          <div className="mt-4 flex flex-col md:flex-row items-center gap-3">
+          <div className="mt-5 flex flex-col md:flex-row items-center gap-3">
             <div className="w-full relative flex items-center">
-              <MapPinIcon size={18} className="absolute left-4 text-neutral-400" />
+              <MapPinIcon size={18} className="absolute left-4 text-luxury-gold" />
               <input 
                 type="text" 
-                placeholder={activeTab === "roommates" ? "Where are you hunting for roommates? (e.g. Indiranagar, HSR Layout)" : "Enter city, neighborhood or area..."}
-                className="w-full bg-neutral-50 text-neutral-900 placeholder-neutral-400 pl-11 pr-4 py-3.5 rounded-2xl text-sm border border-neutral-200/40 focus:outline-hidden focus:border-neutral-400 transition-colors"
+                placeholder={activeTab === "roommates" ? "Search luxury shared spaces..." : "Enter destination or hotel name..."}
+                className="w-full bg-luxury-bg/50 text-luxury-text-beige placeholder-luxury-text-muted/50 pl-11 pr-4 py-3.5 rounded-xl text-sm border border-luxury-border focus:outline-hidden focus:border-luxury-gold focus:ring-1 focus:ring-luxury-gold/50 transition-all"
               />
             </div>
-            <Link href="/login" className="w-full md:w-auto">
-              <button className="w-full bg-linear-to-r from-homely-primary to-homely-secondary text-white shadow-lg shadow-homely-primary/20 hover:shadow-homely-primary/40 text-sm font-medium px-6 py-3.5 rounded-2xl hover:opacity-90 transition-all flex items-center justify-center gap-2 whitespace-nowrap">
-                <MagnifyingGlassIcon size={16} weight="bold" /> Search Now
+            <Link href="/listings" className="w-full md:w-auto">
+              <button className="w-full bg-luxury-gold text-luxury-bg shadow-[0_0_15px_rgba(201,164,92,0.3)] hover:shadow-[0_0_25px_rgba(201,164,92,0.5)] text-sm font-medium px-8 py-3.5 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 whitespace-nowrap">
+                <MagnifyingGlassIcon size={16} weight="bold" /> Discover
               </button>
             </Link>
           </div>
@@ -166,30 +155,30 @@ export default function Home() {
       </section>
 
       {/* 2. LIVE VIBE-MATCH SIMULATION ENGINE */}
-      <section id="vibe-match" className="mt-28 md:mt-40 px-6 md:px-12 max-w-7xl mx-auto">
-        <div className="bg-neutral-900 text-white rounded-[2.5rem] p-8 md:p-16 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-neutral-800/30 rounded-full blur-3xl pointer-events-none" />
+      <section id="vibe-match" className="py-24 px-6 md:px-12 max-w-7xl mx-auto">
+        <div className="bg-luxury-card border border-luxury-border rounded-[2rem] p-8 md:p-16 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-luxury-gold/5 rounded-full blur-3xl pointer-events-none" />
           
-          <div className="lg:col-span-5 flex flex-col justify-center">
-            <span className="text-neutral-400 text-xs font-medium uppercase tracking-widest mb-3 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" /> Try it live
+          <div className="lg:col-span-5 flex flex-col justify-center relative z-10">
+            <span className="text-luxury-gold text-xs font-medium uppercase tracking-widest mb-3 flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-luxury-gold animate-pulse" /> Curated Experience
             </span>
-            <h2 className="text-3xl md:text-5xl tracking-tight leading-tight font-normal">
-              Say goodbye to <br />
-              <span className="text-homely-secondary italic font-instrument">roommate roulette.</span>
+            <h2 className="text-3xl md:text-5xl tracking-tight leading-tight font-instrument">
+              Find your <br />
+              <span className="text-luxury-gold italic">perfect match.</span>
             </h2>
-            <p className="mt-4 text-neutral-400 font-light leading-relaxed text-sm md:text-base">
-              Filter profiles cleanly on individual energy preferences. Our matching engine shifts compatibility algorithms dynamically based on real lifestyle values.
+            <p className="mt-4 text-luxury-text-muted font-light leading-relaxed text-sm md:text-base">
+              Filter profiles cleanly on individual preferences. Our engine ensures you find spaces and people that align with your premium lifestyle.
             </p>
 
             {/* Simulated Live Filters */}
             <div className="mt-8 flex flex-wrap gap-2">
               <button 
                 onClick={() => setSelectedVibe(null)}
-                className={`px-4 py-2 rounded-xl text-xs font-medium border transition-all ${
+                className={`px-4 py-2 rounded-lg text-xs font-medium border transition-all duration-300 ${
                   selectedVibe === null 
-                    ? "bg-white text-neutral-900 border-white" 
-                    : "bg-neutral-800/40 text-neutral-400 border-neutral-800 hover:border-neutral-700"
+                    ? "bg-luxury-gold text-luxury-bg border-luxury-gold" 
+                    : "bg-luxury-bg/50 text-luxury-text-muted border-luxury-border hover:border-luxury-gold/50 hover:text-luxury-text-beige"
                 }`}
               >
                 All Profiles
@@ -198,10 +187,10 @@ export default function Home() {
                 <button
                   key={tag.id}
                   onClick={() => setSelectedVibe(tag.id)}
-                  className={`px-4 py-2 rounded-xl text-xs font-medium border flex items-center gap-1.5 transition-all ${
+                  className={`px-4 py-2 rounded-lg text-xs font-medium border flex items-center gap-1.5 transition-all duration-300 ${
                     selectedVibe === tag.id
-                      ? "bg-linear-to-r from-homely-primary to-homely-secondary text-white border-transparent shadow-[0_0_15px_rgba(99,102,241,0.5)]"
-                      : "bg-neutral-800/40 text-neutral-400 border-neutral-800 hover:border-neutral-700"
+                      ? "bg-luxury-gold text-luxury-bg border-luxury-gold shadow-[0_0_15px_rgba(201,164,92,0.3)]"
+                      : "bg-luxury-bg/50 text-luxury-text-muted border-luxury-border hover:border-luxury-gold/50 hover:text-luxury-text-beige"
                   }`}
                 >
                   {tag.icon}
@@ -212,7 +201,7 @@ export default function Home() {
           </div>
 
           {/* Interactive Stack Cards Container */}
-          <div className="lg:col-span-7 w-full flex flex-col gap-4 relative min-h-[380px] justify-center">
+          <div className="lg:col-span-7 w-full flex flex-col gap-4 relative min-h-[380px] justify-center z-10">
             <AnimatePresence mode="popLayout">
               {filteredRoommates.map((person) => (
                 <motion.div
@@ -222,27 +211,27 @@ export default function Home() {
                   animate={{ opacity: 1, x: 0, scale: 1 }}
                   exit={{ opacity: 0, x: -30, scale: 0.95 }}
                   transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                  className="bg-neutral-800/50 backdrop-blur-md border border-neutral-800 p-5 rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
+                  className="bg-luxury-bg/50 backdrop-blur-md border border-luxury-border p-5 rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 luxury-hover-glow"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="relative w-14 h-14 rounded-full overflow-hidden shrink-0 border border-neutral-700">
+                    <div className="relative w-14 h-14 rounded-full overflow-hidden shrink-0 border-2 border-luxury-gold/30">
                       <Image src={person.img} alt={person.name} fill className="object-cover" />
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <h4 className="font-medium text-white text-base">{person.name}</h4>
-                        <span className="bg-neutral-800 text-neutral-300 text-[10px] px-2 py-0.5 rounded-md font-mono">
-                          {person.match}% Match
+                        <h4 className="font-instrument text-luxury-text-beige text-lg">{person.name}</h4>
+                        <span className="bg-luxury-gold/10 text-luxury-gold border border-luxury-gold/20 text-[10px] px-2 py-0.5 rounded-md tracking-wider">
+                          {person.match}% MATCH
                         </span>
                       </div>
-                      <p className="text-xs text-neutral-400 font-light mt-1 max-w-md">{person.desc}</p>
+                      <p className="text-xs text-luxury-text-muted font-light mt-1 max-w-md leading-relaxed">{person.desc}</p>
                     </div>
                   </div>
                   
                   {/* Tags Group */}
                   <div className="flex gap-1.5 flex-wrap">
                     {person.tags.map((t) => (
-                      <span key={t} className="bg-homely-primary/15 text-homely-secondary border border-homely-primary/20 text-[10px] px-2.5 py-1 rounded-full font-medium">
+                      <span key={t} className="bg-luxury-bg border border-luxury-border text-luxury-gold text-[10px] px-2.5 py-1 rounded-full font-medium">
                         {t}
                       </span>
                     ))}
@@ -255,17 +244,17 @@ export default function Home() {
       </section>
 
       {/* 3. CORE ARCHITECTURAL FEATURES LINK */}
-      <section className="py-24 md:py-36 px-6 md:px-12 bg-white mt-24 border-t border-neutral-100">
+      <section className="py-24 md:py-36 px-6 md:px-12 bg-luxury-bg border-y border-luxury-border">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col lg:flex-row gap-12 justify-between items-start mb-24">
             <div className="max-w-xl">
-              <span className="text-xs text-neutral-400 font-semibold uppercase tracking-wider block mb-2">Designed For Settle-In</span>
-              <h2 className="text-4xl md:text-5xl tracking-tight text-neutral-900 font-normal">
-                Everything you need to <br />plant roots in a new city.
+              <span className="text-xs text-luxury-gold font-medium uppercase tracking-[0.2em] block mb-4">Premium Amenities</span>
+              <h2 className="text-4xl md:text-6xl tracking-tight text-luxury-text-beige font-instrument">
+                Experience unparalleled <br /><span className="italic text-luxury-gold">comfort & style.</span>
               </h2>
             </div>
-            <p className="text-neutral-500 max-w-md text-base md:text-lg font-light leading-relaxed lg:mt-6">
-              Homely bridges the gap perfectly between discovering curated physical architecture and building your fundamental social foundation safely[cite: 1].
+            <p className="text-luxury-text-muted max-w-md text-base md:text-lg font-light leading-relaxed lg:mt-8">
+              Every detail is meticulously crafted to ensure your stay is extraordinary. From curated spaces to verified hosts, we redefine luxury living.
             </p>
           </div>
 
@@ -277,13 +266,13 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.6, delay: idx * 0.05 }}
-                className="p-8 rounded-2xl bg-white hover:bg-neutral-50/80 border border-neutral-200/40 hover:border-homely-primary/30 hover:shadow-xl hover:shadow-homely-primary/5 hover:-translate-y-1 transition-all duration-300 group cursor-default"
+                className="p-8 rounded-2xl bg-luxury-card border border-luxury-border hover:border-luxury-gold/50 transition-all duration-300 group cursor-default luxury-hover-glow"
               >
-                <div className="w-12 h-12 rounded-xl bg-neutral-50 border border-neutral-200/50 flex items-center justify-center mb-6 shadow-xs text-neutral-900 group-hover:bg-linear-to-br group-hover:from-homely-primary group-hover:to-homely-secondary group-hover:text-white transition-all duration-300">
+                <div className="w-12 h-12 rounded-xl bg-luxury-bg border border-luxury-border flex items-center justify-center mb-6 text-luxury-gold group-hover:scale-110 transition-transform duration-500">
                   {feature.icon}
                 </div>
-                <h3 className="text-lg font-medium mb-2 text-neutral-900">{feature.title}</h3>
-                <p className="text-neutral-500 text-sm font-light leading-relaxed">
+                <h3 className="text-lg font-instrument tracking-wide text-luxury-text-beige mb-3">{feature.title}</h3>
+                <p className="text-luxury-text-muted text-sm font-light leading-relaxed">
                   {feature.desc}
                 </p>
               </motion.div>
@@ -293,22 +282,22 @@ export default function Home() {
       </section>
 
       {/* 4. CURATED CONTEXT DRIVEN GALLERY */}
-      <section id="listings" className="py-20 px-6 md:px-12 w-full max-w-screen-2xl mx-auto">
-        <div className="flex items-center justify-between mb-12">
+      <section id="listings" className="py-24 px-6 md:px-12 w-full max-w-screen-2xl mx-auto">
+        <div className="flex items-end justify-between mb-16">
           <div>
-            <span className="text-xs text-neutral-400 font-semibold uppercase tracking-wider block mb-1">Premium Ecosystem Listings</span>
-            <h3 className="text-2xl md:text-3xl tracking-tight">Explore Shared Rentals</h3>
+            <span className="text-xs text-luxury-gold font-medium uppercase tracking-[0.2em] block mb-3">Featured Properties</span>
+            <h3 className="text-3xl md:text-5xl font-instrument text-luxury-text-beige tracking-tight">Our Premium Collection</h3>
           </div>
-          <Link href="/listings" className="text-sm font-medium flex items-center gap-1.5 text-neutral-900 hover:gap-2.5 transition-all">
-            View All Spaces <ArrowRightIcon size={16} />
+          <Link href="/listings" className="text-sm font-medium flex items-center gap-2 text-luxury-gold hover:text-luxury-gold-light transition-colors pb-2">
+            View All <ArrowRightIcon size={16} />
           </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
-            { img: "/Homely1.jpg", area: "Indiranagar", type: "3 BHK Premium Shared", price: "₹18,500/mo" },
-            { img: "/Homely2.jpg", area: "HSR Layout Sector 4", type: "Studio Loft Space", price: "₹24,000/mo" },
-            { img: "/Homely3.jpg", area: "Koramangala 5th Block", type: "2 BHK Luxury Apartment", price: "₹16,000/mo" }
+            { img: "/Homely1.jpg", area: "Beverly Hills", type: "Royal Suite Villa", price: "$2,400/night" },
+            { img: "/Homely2.jpg", area: "Malibu Coast", type: "Oceanfront Penthouse", price: "$3,100/night" },
+            { img: "/Homely3.jpg", area: "Hollywood Hills", type: "Panoramic Mansion", price: "$4,500/night" }
           ].map((item, idx) => (
             <motion.div
               key={idx}
@@ -316,25 +305,25 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7, delay: idx * 0.1 }}
-              className="group cursor-pointer"
+              className="group cursor-pointer block"
             >
-              <div className="relative w-full aspect-4/3 rounded-2xl overflow-hidden bg-neutral-100">
+              <div className="relative w-full aspect-[4/5] rounded-xl overflow-hidden bg-luxury-bg border border-luxury-border">
                 <Image 
                   src={item.img} 
                   alt={item.type} 
                   fill 
                   sizes="(max-width: 768px) 100vw, 33vw" 
-                  className="object-cover transition-transform duration-700 ease-[0.16, 1, 0.3, 1] group-hover:scale-105" 
+                  className="object-cover transition-transform duration-1000 ease-[0.16, 1, 0.3, 1] group-hover:scale-105 opacity-90 group-hover:opacity-100" 
                 />
-              </div>
-              <div className="mt-4 flex items-start justify-between">
-                <div>
-                  <h4 className="font-medium text-neutral-900 text-base group-hover:text-neutral-600 transition-colors">{item.type}</h4>
-                  <p className="text-sm text-neutral-400 font-light flex items-center gap-1 mt-0.5">
+                <div className="absolute inset-0 bg-linear-to-t from-luxury-bg via-luxury-bg/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-500"></div>
+                <div className="absolute bottom-0 left-0 right-0 p-6 flex flex-col justify-end text-left z-10">
+                  <p className="text-xs text-luxury-gold font-medium uppercase tracking-widest mb-2 flex items-center gap-1.5">
                     <MapPinIcon size={14} /> {item.area}
                   </p>
+                  <h4 className="font-instrument text-2xl text-luxury-text-beige mb-3">{item.type}</h4>
+                  <div className="w-full h-[1px] bg-luxury-border mb-3"></div>
+                  <span className="text-sm font-medium text-luxury-text-muted">{item.price}</span>
                 </div>
-                <span className="text-sm font-medium bg-neutral-100 px-3 py-1 rounded-lg text-neutral-900">{item.price}</span>
               </div>
             </motion.div>
           ))}

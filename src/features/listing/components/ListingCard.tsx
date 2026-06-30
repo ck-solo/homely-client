@@ -115,35 +115,35 @@ export default function ListingCard({
             }
           : { duration: 0.3 }
       }
-      className={`w-full h-fit ${listing ? "" : "sm:w-[400px]"} bg-white rounded-[32px] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-neutral-100/60 relative z-10 group ${className}`}
+      className={`w-full h-fit ${listing ? "" : "sm:w-[400px]"} bg-luxury-card rounded-[32px] p-6 shadow-2xl border border-luxury-border relative z-10 group luxury-hover-glow ${className}`}
     >
       {/* Card Header Tag Row */}
       <div className="flex flex-wrap justify-between items-center w-full gap-2">
         <div className="flex items-center gap-2">
           {/* Category & Preference tag */}
-          <span className="bg-[#222222] text-[#F3F4F6] px-3.5 py-1.5 rounded-full text-xs font-normal tracking-wide shadow-sm">
+          <span className="bg-luxury-bg text-luxury-gold border border-luxury-gold/30 px-3.5 py-1.5 rounded-full text-xs font-normal tracking-widest uppercase">
             {propertyType || "Apartment"} • {genderPreference}
           </span>
         </div>
 
         {/* Combined Rent Price Pill */}
         <div className="flex items-center text-[10px] font-medium tracking-wider shadow-sm rounded-full overflow-hidden">
-          <span className="bg-[#222222] text-white px-3 py-1.5 uppercase border border-r-0 border-[#222222] rounded-l-full">
+          <span className="bg-luxury-gold text-luxury-bg px-3 py-1.5 uppercase border border-r-0 border-luxury-gold rounded-l-full">
             Rent
           </span>
-          <span className="bg-white text-[#222222] px-3 py-1.5 font-bold border border-[#E5E5E5] rounded-r-full">
+          <span className="bg-luxury-bg text-luxury-text-beige px-3 py-1.5 font-bold border border-luxury-border rounded-r-full">
             {formattedRent}/mo
           </span>
         </div>
       </div>
 
       {/* Title */}
-      <h3 className="text-[28px] font-normal tracking-tight text-[#222222] mt-5 line-clamp-1 min-h-[38px] leading-tight">
+      <h3 className="text-[28px] font-instrument tracking-wide text-luxury-text-beige mt-5 line-clamp-1 min-h-[38px] leading-tight">
         {title || "Discovering peace"}
       </h3>
 
       {/* Description */}
-      <p className="text-lg text-neutral-500 font-light leading-5 mt-2.5 mb-4 line-clamp-3 min-h-[72px] wrap-break-word">
+      <p className="text-lg text-luxury-text-muted font-light leading-5 mt-2.5 mb-4 line-clamp-3 min-h-[72px] wrap-break-word">
         {description ||
           "Far from the city's noise, the green mountains stretch endlessly into the horizon, blanketed with mist and silence."}
       </p>
@@ -154,7 +154,7 @@ export default function ListingCard({
           amenities.map((amenity, idx) => (
             <span
               key={idx}
-              className="text-[10px] bg-neutral-100 text-neutral-600 px-2.5 py-1 rounded-full border border-neutral-200/40 font-medium"
+              className="text-[10px] bg-luxury-bg text-luxury-text-beige px-2.5 py-1 rounded-full border border-luxury-border font-medium"
             >
               {amenity}
             </span>
@@ -163,7 +163,7 @@ export default function ListingCard({
           ["High-Speed Wi-Fi", "Air Conditioning"].map((amenity, idx) => (
             <span
               key={idx}
-              className="text-[10px] bg-neutral-50 text-neutral-300 px-2.5 py-1 rounded-full border border-neutral-200/20 font-light select-none"
+              className="text-[10px] bg-luxury-bg/50 text-luxury-text-muted/50 px-2.5 py-1 rounded-full border border-luxury-border/50 font-light select-none"
             >
               {amenity}
             </span>
@@ -172,7 +172,7 @@ export default function ListingCard({
       </div>
 
       {/* Card Hero Image (inset at bottom) */}
-      <div className="relative h-60 bg-neutral-100 rounded-[24px] overflow-hidden shadow-inner">
+      <div className="relative h-60 bg-luxury-bg rounded-[24px] overflow-hidden shadow-inner">
         <AnimatePresence mode="wait">
           {displayImageUrl ? (
             <motion.div
@@ -206,7 +206,7 @@ export default function ListingCard({
             (typeof listing.ownerRef === "string" ? listing.ownerRef === user._id : listing.ownerRef._id === user._id) && (
             <button
               onClick={() => router.push(`/edit-listing/${listing._id}`)}
-              className="p-2.5 rounded-full bg-white/80 backdrop-blur-sm hover:bg-indigo-50 text-neutral-600 hover:text-indigo-600 transition-all duration-200 shadow-md border border-neutral-100/40"
+              className="p-2.5 rounded-full bg-luxury-card/80 backdrop-blur-sm hover:bg-luxury-bg-lighter text-luxury-text-muted hover:text-luxury-gold transition-all duration-200 shadow-md border border-luxury-border"
               aria-label="Edit listing"
               title="Edit Listing"
             >
@@ -219,10 +219,10 @@ export default function ListingCard({
             <button
               onClick={handleToggleFavorite}
               disabled={isCurrentlyToggling}
-              className={`p-2.5 rounded-full backdrop-blur-sm transition-all duration-200 shadow-md border border-neutral-100/40 ${
+              className={`p-2.5 rounded-full backdrop-blur-sm transition-all duration-200 shadow-md border border-luxury-border ${
                 isCurrentlyFavorited
-                  ? "bg-red-50/90 text-red-500 hover:bg-red-100"
-                  : "bg-white/80 hover:bg-white text-neutral-500 hover:text-red-500"
+                  ? "bg-red-900/40 text-red-400 hover:bg-red-900/60"
+                  : "bg-luxury-card/80 hover:bg-luxury-bg-lighter text-luxury-text-muted hover:text-red-400"
               }`}
               aria-label={isCurrentlyFavorited ? "Remove from favorites" : "Add to favorites"}
               id={`favorite-btn-${listing._id}`}
@@ -262,41 +262,41 @@ export function ListingCardSkeleton({ index = 0 }: { index?: number }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: index * 0.05 }}
-      className="w-full bg-white rounded-[32px] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-neutral-100/60 flex flex-col pointer-events-none"
+      className="w-full bg-luxury-card rounded-[32px] p-6 shadow-2xl border border-luxury-border flex flex-col pointer-events-none"
     >
       {/* Card Header Tag Row */}
       <div className="flex justify-between items-center w-full">
         {/* Category & Preference tag skeleton */}
-        <div className="h-7 w-28 bg-neutral-100 rounded-full animate-pulse" />
+        <div className="h-7 w-28 bg-luxury-bg rounded-full animate-pulse" />
 
         {/* Combined Rent Price Pill skeleton */}
         <div className="flex items-center rounded-full overflow-hidden">
-          <div className="h-7 w-12 bg-neutral-200 animate-pulse border-r border-white" />
-          <div className="h-7 w-16 bg-neutral-100 animate-pulse" />
+          <div className="h-7 w-12 bg-luxury-gold animate-pulse border-r border-luxury-bg" />
+          <div className="h-7 w-16 bg-luxury-bg animate-pulse" />
         </div>
       </div>
 
       {/* Title skeleton */}
       <div className="h-[38px] mt-5 flex items-center">
-        <div className="h-7 w-3/4 bg-neutral-200 rounded-lg animate-pulse" />
+        <div className="h-7 w-3/4 bg-luxury-border rounded-lg animate-pulse" />
       </div>
 
       {/* Description skeleton */}
       <div className="mt-2.5 mb-4 space-y-2 min-h-[72px]">
-        <div className="h-4 w-full bg-neutral-100 rounded animate-pulse" />
-        <div className="h-4 w-5/6 bg-neutral-100 rounded animate-pulse" />
-        <div className="h-4 w-2/3 bg-neutral-100 rounded animate-pulse" />
+        <div className="h-4 w-full bg-luxury-bg rounded animate-pulse" />
+        <div className="h-4 w-5/6 bg-luxury-bg rounded animate-pulse" />
+        <div className="h-4 w-2/3 bg-luxury-bg rounded animate-pulse" />
       </div>
 
       {/* Amenities Tag Row skeleton */}
       <div className="flex flex-wrap gap-1.5 mb-6 min-h-[26px]">
-        <div className="h-[22px] w-20 bg-neutral-100 rounded-full animate-pulse" />
-        <div className="h-[22px] w-24 bg-neutral-100 rounded-full animate-pulse" />
-        <div className="h-[22px] w-16 bg-neutral-100 rounded-full animate-pulse" />
+        <div className="h-[22px] w-20 bg-luxury-bg rounded-full animate-pulse" />
+        <div className="h-[22px] w-24 bg-luxury-bg rounded-full animate-pulse" />
+        <div className="h-[22px] w-16 bg-luxury-bg rounded-full animate-pulse" />
       </div>
 
       {/* Card Hero Image skeleton */}
-      <div className="relative h-60 bg-neutral-100 rounded-[24px] overflow-hidden animate-pulse" />
+      <div className="relative h-60 bg-luxury-bg rounded-[24px] overflow-hidden animate-pulse" />
     </motion.div>
   );
 }

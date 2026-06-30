@@ -138,7 +138,7 @@ function ListingsPageInner() {
   const hasActiveSearch = debouncedSearch || filters.type.length > 0 || filters.gender.length > 0 || filters.minRent > 0 || filters.maxRent < 100000;
 
   return (
-    <section className="min-h-screen bg-[#FAFAFA] pt-28 md:pt-32 pb-16">
+    <section className="min-h-screen bg-luxury-bg pt-28 md:pt-32 pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* ─── Page Header ──── */}
@@ -148,15 +148,15 @@ function ListingsPageInner() {
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="mb-8"
         >
-          <h1 className="text-3xl md:text-4xl lg:text-5xl tracking-tight text-neutral-900">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl tracking-tight text-luxury-text-beige font-instrument">
             {debouncedSearch ? (
               <>
                 Results for{" "}
-                <span className="text-neutral-400">&ldquo;{debouncedSearch}&rdquo;</span>
+                <span className="text-luxury-gold italic">&ldquo;{debouncedSearch}&rdquo;</span>
               </>
             ) : (
               <>
-                Browse <span className="text-neutral-400">Listings</span>
+                Browse <span className="text-luxury-gold italic">Premium Spaces</span>
               </>
             )}
           </h1>
@@ -192,7 +192,7 @@ function ListingsPageInner() {
               exit={{ opacity: 0 }}
               className="fixed top-0 left-0 right-0 z-60 h-0.5"
             >
-              <div className="h-full bg-neutral-900 animate-pulse rounded-full" />
+              <div className="h-full bg-luxury-gold animate-pulse rounded-full" />
             </motion.div>
           )}
         </AnimatePresence>
@@ -212,13 +212,13 @@ function ListingsPageInner() {
             animate={{ opacity: 1, y: 0 }}
             className="flex flex-col items-center justify-center py-24 text-center"
           >
-            <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center mb-4">
+            <div className="w-16 h-16 rounded-full bg-red-900/20 border border-red-500/30 flex items-center justify-center mb-4">
               <SmileySadIcon size={32} weight="light" className="text-red-400" />
             </div>
-            <h3 className="text-lg font-semibold text-neutral-900 mb-2">
+            <h3 className="text-lg font-instrument text-luxury-text-beige mb-2">
               Something went wrong
             </h3>
-            <p className="text-sm text-neutral-500 max-w-md">
+            <p className="text-sm text-luxury-text-muted max-w-md">
               We couldn&apos;t load the listings. Please try again later.
             </p>
           </motion.div>
@@ -228,19 +228,19 @@ function ListingsPageInner() {
             animate={{ opacity: 1, y: 0 }}
             className="flex flex-col items-center justify-center py-24 text-center"
           >
-            <div className="w-16 h-16 rounded-full bg-neutral-100 flex items-center justify-center mb-4">
-              <HouseLineIcon size={32} weight="light" className="text-neutral-400" />
+            <div className="w-16 h-16 rounded-full bg-luxury-card border border-luxury-border flex items-center justify-center mb-4">
+              <HouseLineIcon size={32} weight="light" className="text-luxury-gold" />
             </div>
-            <h3 className="text-lg font-semibold text-neutral-900 mb-2">
+            <h3 className="text-lg font-instrument text-luxury-text-beige mb-2">
               No listings found
             </h3>
-            <p className="text-sm text-neutral-500 max-w-md mb-6">
+            <p className="text-sm text-luxury-text-muted max-w-md mb-6">
               Try adjusting your search or filters to discover more options.
             </p>
             {hasActiveSearch && (
               <button
                 onClick={handleReset}
-                className="px-5 py-2.5 rounded-full bg-neutral-900 text-white text-sm font-medium hover:bg-neutral-800 transition-colors"
+                className="px-5 py-2.5 rounded-full bg-luxury-gold text-luxury-bg text-sm font-medium hover:bg-luxury-gold-light transition-colors luxury-hover-glow"
                 id="empty-state-reset-btn"
               >
                 Clear all filters
@@ -270,7 +270,7 @@ function ListingsPageInner() {
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page === 1}
-                  className="px-4 py-2 rounded-xl text-sm font-medium border border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  className="px-4 py-2 rounded-xl text-sm font-medium border border-luxury-border bg-luxury-card text-luxury-text-beige hover:bg-luxury-bg-lighter disabled:opacity-40 disabled:cursor-not-allowed transition-colors luxury-hover-glow"
                   id="pagination-prev"
                 >
                   Previous
@@ -297,8 +297,8 @@ function ListingsPageInner() {
                           w-10 h-10 rounded-xl text-sm font-medium transition-all duration-200
                           ${
                             page === pageNum
-                              ? "bg-neutral-900 text-white"
-                              : "bg-white text-neutral-600 border border-neutral-200 hover:bg-neutral-50"
+                              ? "bg-luxury-gold text-luxury-bg shadow-md"
+                              : "bg-luxury-card text-luxury-text-beige border border-luxury-border hover:bg-luxury-bg-lighter"
                           }
                         `}
                         id={`pagination-page-${pageNum}`}
@@ -312,7 +312,7 @@ function ListingsPageInner() {
                 <button
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                   disabled={page === totalPages}
-                  className="px-4 py-2 rounded-xl text-sm font-medium border border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  className="px-4 py-2 rounded-xl text-sm font-medium border border-luxury-border bg-luxury-card text-luxury-text-beige hover:bg-luxury-bg-lighter disabled:opacity-40 disabled:cursor-not-allowed transition-colors luxury-hover-glow"
                   id="pagination-next"
                 >
                   Next
@@ -331,10 +331,10 @@ export default function ListingsPage() {
   return (
     <Suspense
       fallback={
-        <section className="min-h-screen bg-[#FAFAFA] pt-28 md:pt-32 pb-16">
+        <section className="min-h-screen bg-luxury-bg pt-28 md:pt-32 pb-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="h-12 w-64 bg-neutral-100 rounded-xl animate-pulse mb-8" />
-            <div className="h-12 w-full max-w-2xl bg-neutral-100 rounded-2xl animate-pulse mb-10" />
+            <div className="h-12 w-64 bg-luxury-card rounded-xl animate-pulse mb-8 border border-luxury-border" />
+            <div className="h-12 w-full max-w-2xl bg-luxury-card rounded-2xl animate-pulse mb-10 border border-luxury-border" />
             <div className="w-full">
               {/* Fallback uses CSS columns since MasonryGrid needs JS to measure window width */}
               <div className="columns-1 md:columns-2 lg:columns-3 gap-6 [column-fill:balance] w-full">

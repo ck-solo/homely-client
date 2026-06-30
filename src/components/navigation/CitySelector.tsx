@@ -33,16 +33,16 @@ export default function CitySelector() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 px-3 py-1.5 md:px-4 md:py-2 bg-neutral-50/80 hover:bg-neutral-100 backdrop-blur-xs border border-neutral-200/60 rounded-full transition-all duration-300 text-sm font-medium text-neutral-800"
+        className="flex items-center gap-1.5 px-3 py-1.5 md:px-4 md:py-2 bg-luxury-bg/80 hover:bg-luxury-card backdrop-blur-xs border border-luxury-border rounded-full transition-all duration-300 text-sm font-medium text-luxury-text-beige luxury-hover-glow"
       >
-        <MapPin size={16} weight="bold" className="text-homely-primary" />
+        <MapPin size={16} weight="bold" className="text-luxury-gold" />
         <span className="hidden sm:inline">{selectedCity}</span>
         <span className="sm:hidden">{selectedCity.slice(0, 3)}</span>
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.3, ease: "easeInOut" }}
         >
-          <CaretDown size={14} className="text-neutral-500" />
+          <CaretDown size={14} className="text-luxury-text-muted" />
         </motion.div>
       </button>
 
@@ -53,7 +53,7 @@ export default function CitySelector() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 5, scale: 0.95 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="absolute right-0 top-full mt-2 w-48 bg-white/90 backdrop-blur-xl border border-neutral-200/60 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] rounded-2xl overflow-hidden z-50"
+            className="absolute right-0 top-full mt-2 w-48 bg-luxury-card/95 backdrop-blur-xl border border-luxury-border shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] rounded-2xl overflow-hidden z-50"
           >
             <div className="p-1.5 flex flex-col gap-0.5">
               {CITIES.map((city) => (
@@ -65,8 +65,8 @@ export default function CitySelector() {
                   }}
                   className={`flex items-center justify-between w-full px-3 py-2.5 rounded-xl text-sm transition-colors ${
                     selectedCity === city
-                      ? "bg-neutral-900 text-white font-medium"
-                      : "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900"
+                      ? "bg-luxury-gold text-luxury-bg font-medium"
+                      : "text-luxury-text-muted hover:bg-luxury-bg-lighter hover:text-luxury-text-beige"
                   }`}
                 >
                   {city}
